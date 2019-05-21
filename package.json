@@ -4,7 +4,7 @@
   "description": "visual source backend",
   "main": "src/server.js",
   "scripts": {
-    "start": "nodemon src/server.js"
+    "start": "node src/server.js"
   },
   "author": "Collin",
   "license": "MIT",
