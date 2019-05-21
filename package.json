@@ -1,15 +1,23 @@
 {
-  "name": "node-sandbox",
+  "name": "vs_backend",
   "version": "1.0.0",
-  "description": "Simple Node Sandbox",
+  "description": "visual source backend",
   "main": "src/server.js",
   "scripts": {
     "start": "nodemon src/server.js"
   },
+  "author": "Collin",
+  "license": "MIT",
   "dependencies": {
-    "body-parser": "1.19.0",
-    "express": "4.17.0"
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.0",
+    "express-ws": "^4.0.0",
+    "knex": "^0.16.5",
+    "pg": "^7.11.0"
   },
   "devDependencies": {
-    "nodemon": "1.18.4"
+    "cors": "^2.8.5",
+    "nodemon": "^1.19.0"
   }
+}
