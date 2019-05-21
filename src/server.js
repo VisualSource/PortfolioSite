@@ -8,6 +8,9 @@ app.get("/", (req, res) => {
   res.send("hello");
   res.end();
 });
+app.use("*", (req, resp)=> {
+  resp.sendFile("/public/index.html");
+});
 app.listen(port, () => {
   console.log("server starting on " + port);
 });
