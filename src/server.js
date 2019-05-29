@@ -3,7 +3,7 @@ const bodyparser = require("body-parser");
 const app = express();
 const port = process.env.PORT;
 const users = {
-  user : [{ name: Collin, cId: "435k435", icon: "fav.png"}]
+  user : [{ name: "Collin", cId: "435k435", icon: "fav.png"}]
 }
 app.use(bodyparser.json());
 app.use(express.static("public"));
@@ -12,7 +12,7 @@ res.json("Hello");
 res.end();
 });
 app.get('/profile/:id',(req,res)=>{
-    res.json();
+    res.json(users.user);
 });
 app.get("*", (req, res)=> {
   res.json("Hello");
