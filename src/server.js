@@ -4,13 +4,10 @@ const app = express();
 const port = process.env.PORT;
 app.use(bodyparser.json());
 app.use(express.static("public"));
-app.get("/", (req, res) => {
-  res.send("hello");
-  res.end();
-});
-app.use("*", (req, resp)=> {
-  resp.sendFile("../public/index.html");
+
+app.use("*", (req, res)=> {
+  res.end(); 
 });
 app.listen(port, () => {
-  console.log("server starting on " + port);
+  console.log(`Starting server on ${port}`);
 });
