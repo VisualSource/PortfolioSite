@@ -7,10 +7,15 @@ const users = {
 }
 app.use(bodyparser.json());
 app.use(express.static("public"));
+app.get('/',(req,res)=>{
+res.json("Hello");
+res.end();
+});
 app.get('/profile/:id',(req,res)=>{
     res.json();
 });
 app.get("*", (req, res)=> {
+  res.json("Hello");
   res.end(); 
 });
 app.listen(port, () => {
