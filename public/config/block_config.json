@@ -1,0 +1,9 @@
+{
+  "field":  {
+        "modal": "test.obj",
+        "mtl": "text.mtl",
+        "actions": ["roads","trees",""], 
+        "display": "Field"    
+}
+
+}
