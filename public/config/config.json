@@ -1,0 +1,63 @@
+{
+  "factions": {"Xin-xi":{},
+               "Imperius":{},
+               "Bardur":{},
+               "Oumaji":{},
+               "Kickoo":{},
+               "Hoodrick":{},
+               "Luxidoor":{},
+               "Vengir":{},
+               "Zebasi":{},
+               "Ai-Mo":{},
+               "Questzali":{},
+               "Y/adakk":{}
+              },
+  "factions_powered": {"Aquarion":{},
+                       "Elyrion":{},
+                       "Polaris":{}
+                      },
+  "blocks": {
+      "field":  {
+            "model": "field.obj",
+            "mtl": ["field_base.mtl","field_sand.mtl"],
+            "actions": ["roads","trees","Furit"], 
+            "display": "Field",
+            "root": "base_field"  
+      },
+      "water":{
+          "model":"water.obj",
+          "mtl":"water.obj",
+          "actions":[],
+          "display":"Water",
+          "root": "base_water"
+      },
+      "ocean":{ 
+        "model": "ocean.obj",
+        "mtl":"ocean.obj",
+        "actions":[],
+        "display":"Ocean",
+        "root":"base_ocean"
+      },
+      "furit":{
+        "model": ["furit_apple.obj"],
+        "mtl":["furit_apple.mtl"],
+        "textures": ["furit_apple.jpg"],
+        "actions": [],
+        "display": "Furit",
+        "root":"furit_"
+      },
+      "slector":{
+        "model": "slector.obj",
+        "mtl": ["slectorNofaction.mtl","slectorFaction.mtl"],
+        "textures":["SlectorNoFaction.png","SlectorFaction.png"],
+        "display": null
+      },
+      "cloud":{
+        "model": "cloud.obj",
+        "mtl": "cloud.mtl",
+        "display": "Cloud",
+        "root":"cloud"
+      }
+  }
+
+}

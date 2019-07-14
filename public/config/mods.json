@@ -1,9 +1,10 @@
 { 
     "mods": {
         "walls": {
-            "model" : "",
-            "mtl": "",
-            "script": ""
+            "model" : "walls.obj",
+            "mtl": "walls.obj",
+            "textures":["wall.png"],
+            "script": "walls.poly"
         }
     }
 }
