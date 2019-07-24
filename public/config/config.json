@@ -1,4 +1,5 @@
 {
+  "build": "0.1.8 (alpha)",
   "factions": {"Xin-xi":{},
                "Imperius":{},
                "Bardur":{},
@@ -12,10 +13,6 @@
                "Questzali":{},
                "Y/adakk":{}
               },
-  "factions_powered": {"Aquarion":{},
-                       "Elyrion":{},
-                       "Polaris":{}
-                      },
   "blocks": {
       "field":  {
             "model": "field.obj",
