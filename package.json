@@ -1,6 +1,6 @@
 {
   "name": "vs_webserver",
-  "version": "1.3.8.2",
+  "version": "1.3.9a",
   "description": "",
   "main": "server.js",
   "scripts": {
@@ -13,8 +13,7 @@
     "express": "^4.17.1",
     "ws": "^7.1.1"
   },
-  "devDependencies":{
+  "devDependencies": {
     "nodemon": "^1.19.1"
-
   }
 }
