@@ -1,7 +1,8 @@
 const PORT = process.env.PORT || 8000;
+const DATABASE_URL = process.env.DATABASE_URL;
 
 // should require https but server has no SLL
-const server = require('http').createServer();
+const server = require('https').createServer();
 const webSocketServer = new (require('ws')).Server({server:server});
 
 
