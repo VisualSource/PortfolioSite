@@ -1,23 +1,17 @@
-const express = require("express");
-const bodyparser = require("body-parser");
-const app = express();
-const port = process.env.PORT;
-const users = {
-  user : [{ name: "Collin", cId: "435k435", icon: "fav.png"}]
-}
-app.use(bodyparser.json());
-app.use(express.static("public"));
-app.get('/',(req,res)=>{
-res.json("Hello");
-res.end();
-});
-app.get('/profile/:id',(req,res)=>{
-    res.json(users.user);
-});
-app.get("*", (req, res)=> {
-  res.json("Hello");
-  res.end(); 
-});
-app.listen(port, () => {
-  console.log(`Starting server on ${port}`);
-});
+const PORT = process.env.PORT || 8000;
+
+// should require https but server has no SLL
+const server = require('http').createServer();
+const webSocketServer = new (require('ws')).Server({server:server});
+
+
+const api = require('./controllers/api');
+const websocket = require('./controllers/websocket');
+
+
+server.on('request', api);
+
+webSocketServer.on('connection',(ws,conn)=>{websocket(ws,conn)})
+
+
+server.listen(PORT,()=>{console.log(`Listening: ${PORT}. Server Ready`)})
