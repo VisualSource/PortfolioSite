@@ -1,26 +1,7 @@
 {
-  "build": "0.1.8 (alpha)",
-  "factions": {"Xin-xi":{
-                  "head": "./images/XinXiHead.png"
-                },
-               "Imperius":{
-                 "head": "./images/ImperiusHead.png"
-               },
-               "Bardur":{
-                 "head":"./images/BardurHead.png"
-               },
-               "Oumaji":{
-                 "head":"./images/OumajiHead.png"
-               },
-               "Vengir":{
-                 "head": ""
-               }
-              },
+  "build": "2.0.0 (alpha)(Reworked-Version)",
   "settings": {
-    "defaultWorldSize": 11,
-    "world": {
-      "max_fruit": 6,
-      "max_trees": 10
-    }
+    "lang":"en",
+    "forceLogin":false
   }
 }

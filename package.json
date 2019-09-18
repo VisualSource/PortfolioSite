@@ -11,9 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "sanitize": "^2.1.0",
     "ws": "^7.1.2",
     "nodemon": "^1.19.2"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
