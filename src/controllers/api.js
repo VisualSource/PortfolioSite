@@ -1,22 +1,5 @@
-const express = require('express');
-const app = express();
 
 
-app.use(express.static('public'));
-
-
-app.get('/',(req,res)=>{
-    res.end();
-});
-
-app.get('*',(req,res)=>{
-    res.end();
-});
-
-
-app.post('/user/:id',(req,res)=>{
-    res.json({user: req.params['id']});
-});
 
 let bcrypt;
 let db;
@@ -42,4 +25,3 @@ const handleLoginIn = (req, res)=>{
     .catch(err=>res.status(400).json("invalid credentials 2 "));
 }
 
-module.exports = app;
