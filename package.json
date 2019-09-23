@@ -12,11 +12,14 @@
   "author": "Collin",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "3.0.6",
     "fastify": "^2.8.0",
-    "fastify-error-page": "^3.0.0",
+    "fastify-auth": "0.6.0",
+    "fastify-bookshelfjs": "1.1.0",
     "fastify-static": "^2.5.0",
     "fastify-websocket": "^0.6.0",
     "nodemon": "^1.19.2",
+    "pg": "7.12.1",
     "sanitize": "^2.1.0"
   },
   "devDependencies": {}
