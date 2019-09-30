@@ -8,6 +8,12 @@
     "dev": "nodemon server",
     "test": "curl http://localhost:8000"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "node_modules/**/node_modules"
+    ],
+    "env": {}
+  },
   "keywords": [],
   "author": "Collin",
   "license": "MIT",
@@ -15,9 +21,9 @@
     "bcrypt": "3.0.6",
     "fastify": "^2.8.0",
     "fastify-auth": "0.6.0",
-    "fastify-bookshelfjs": "1.1.0",
     "fastify-static": "^2.5.0",
     "fastify-websocket": "^0.6.0",
+    "knex": "^0.19.4",
     "nodemon": "^1.19.2",
     "pg": "7.12.1",
     "sanitize": "^2.1.0"

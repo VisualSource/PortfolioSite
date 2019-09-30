@@ -1,14 +1,17 @@
 const PORT = process.env.PORT || 8000;
-const DATABASE_URL = process.env.DATABASE_URL || "http://localhost:5001";
-const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || "root";
+const DATABASE_URL = process.env.DATABASE_URL || "localhost:5432";
 const path = require("path");
 const wsHandler = require("./src/controllers/wsHandler");
 const fastify = require("fastify")({ logger: false });
-
-function getThroneRoom(faction = "") {
-  console.log(faction);
-  return { data: [] };
-}
+const knex = require('knex')({
+  client:"pg",
+  connection:{
+    host:DATABASE_URL,
+    user:"postgres",
+    password:"root",
+    database:"visualsource"
+  }
+});
 /**
  * 2xx Succes
  *
@@ -26,33 +29,42 @@ function getThroneRoom(faction = "") {
  *  406 Not Acceptable
  *  409 Conflict
  */
-fastify.register(require("fastify-websocket"));
 
+
+fastify.decorate('verifyUserAndPassword',(req,rep,done)=>{
+  //check logic
+  done();
+})
+fastify.register(require("fastify-websocket"));
+fastify.register(require("fastify-auth"));
 fastify.register(require("fastify-static"), {
   root: path.join(__dirname, "public")
 });
-const bookshelf = require("fastify-bookshelfjs");
-fastify.register(
-  bookshelf,
-  {
-    client: "pg",
-    connection: {
-      host: DATABASE_URL,
-      user: "host",
-      password: DATABASE_PASSWORD,
-      database: "user"
-    }
-  },
-  console.error
-);
-
 fastify.use(require("sanitize").middleware);
 
 fastify.get("/polytopia", { websocket: true }, wsHandler);
 
-fastify.post("/user/:id", (request, reply) => {
-  reply.status(409).send({ error: "Conflict" });
+fastify.route({
+  method: "POST",
+  url:"/user/:id",
+  handler:(req,reply)=>{
+    reply.status(400).send({http:"No Content"})
+  }
 });
+
+fastify.route({
+  method: "POST",
+  url:"/login",
+  handler:(req,reply)=>{
+    reply.status(400).send({http:"No Content"})
+  }
+});
+
+const getThroneRoom = (faction = "") => {
+  console.log(faction);
+  return { data: [] };
+}
+
 fastify.post("/throneroom/:faction", async (req, rep) => {
   let data = await getThroneRoom(req.params.faction);
   return data;
