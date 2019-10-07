@@ -14,6 +14,8 @@ const wsHandler = (con,req,params)=>{
      switch (parsedMsg.type) {
         case "LOGIN":
              break;
+        case "REQUEST":
+            break;
         case "UPDATE":
              break;
         case "JOIN":
@@ -22,7 +24,7 @@ const wsHandler = (con,req,params)=>{
             break;
         case "EXIT":
             con.socket.send(JSON.stringify({status:200}));
-            con.socket.terminate();
+            con.socket.close(1000,"Exit websocket");
             break;
         default:
              con.socket.send(JSON.stringify({status: 406}));
