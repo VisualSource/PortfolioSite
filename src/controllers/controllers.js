@@ -1,4 +1,28 @@
 
+/**
+ * 2xx Succes
+ *
+ *  200 Ok
+ *  202 Accepted
+ *  204 No Content
+ *
+ *
+ * 4xx Client Errors
+ *
+ *  400 Bad Request
+ *  401 unauthorized
+ *  403 Forbidden
+ *  404 Not Found
+ *  406 Not Acceptable
+ *  409 Conflict
+ */
+const getThrownRoomData = async(req,rep)=>{
+     let data = req.params.faction
+     return data;
+}
+
+module.export = {getThrownRoomData}
+
 /*
 const DATABASE_URL = process.env.DATABASE_URL || "http://localhost:5001";
 let bcrypt;

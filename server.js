@@ -2,6 +2,7 @@ const PORT = process.env.PORT || 8000;
 const DATABASE_URL = process.env.DATABASE_URL || "localhost:5432";
 const path = require("path");
 const wsHandler = require("./src/controllers/wsHandler");
+const controllers = require("./src/controllers/controllers")
 const fastify = require("fastify")({ logger: false });
 const knex = require('knex')({
   client:"pg",
@@ -12,37 +13,33 @@ const knex = require('knex')({
     database:"visualsource"
   }
 });
-/**
- * 2xx Succes
- *
- *  200 Ok
- *  202 Accepted
- *  204 No Content
- *
- *
- * 4xx Client Errors
- *
- *  400 Bad Request
- *  401 unauthorized
- *  403 Forbidden
- *  404 Not Found
- *  406 Not Acceptable
- *  409 Conflict
- */
-
-
-fastify.decorate('verifyUserAndPassword',(req,rep,done)=>{
-  //check logic
-  done();
-})
 fastify.register(require("fastify-websocket"));
-fastify.register(require("fastify-auth"));
 fastify.register(require("fastify-static"), {
   root: path.join(__dirname, "public")
 });
 fastify.use(require("sanitize").middleware);
 
 fastify.get("/polytopia", { websocket: true }, wsHandler);
+
+fastify
+  .decorate('verifyUserAndPassword', async (request, reply)=> {
+    let test = await request;
+    return new Error("Just What we need")
+  })
+  .register(require('fastify-auth'))
+  .after(() => {
+    fastify.route({
+      method: 'GET',
+      url: '/auth',
+      preHandler: fastify.auth([
+        fastify.verifyUserAndPassword
+      ]),
+      handler: (req, reply) => {
+        req.log.info('Auth route')
+        reply.send({ hello: "test" })
+      }
+    })
+  });
 
 fastify.route({
   method: "POST",
@@ -60,15 +57,8 @@ fastify.route({
   }
 });
 
-const getThroneRoom = (faction = "") => {
-  console.log(faction);
-  return { data: [] };
-}
 
-fastify.post("/throneroom/:faction", async (req, rep) => {
-  let data = await getThroneRoom(req.params.faction);
-  return data;
-});
+fastify.post("/throneroom/:faction", ()=>{});
 fastify.get("/", async (request, reply) => {
   reply.sendFile("index.html");
 });
@@ -91,7 +81,6 @@ const start = async () => {
   try {
     await fastify.listen(PORT);
     fastify.log.info(`server listening on ${fastify.server.address().port}`);
-    console.log(`server listening on ${fastify.server.address().port}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
