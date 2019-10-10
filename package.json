@@ -24,7 +24,7 @@
     "fastify-basic-auth": "^0.4.0",
     "fastify-static": "^2.5.0",
     "fastify-websocket": "^0.6.0",
-    "knex": "^0.19.4",
+    "knex": "^0.19.5",
     "nodemon": "^1.19.3",
     "pg": "7.12.1",
     "sanitize": "^2.1.0"
