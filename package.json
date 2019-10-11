@@ -23,6 +23,7 @@
     "fastify-accepts": "^0.5.0",
     "fastify-auth": "0.6.0",
     "fastify-basic-auth": "^0.4.0",
+    "fastify-cookie": "^3.1.0",
     "fastify-static": "^2.5.0",
     "fastify-websocket": "^0.6.0",
     "knex": "^0.19.5",

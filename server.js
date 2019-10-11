@@ -41,12 +41,12 @@ fastify.get("/polytopia", { websocket: true }, wsHandler);
       ]),
       handler: (req, reply) => {
            const accept = req.accepts()
-          console.log(req.body)
-          console.log(sanitizer.sanitize(req.body.username))
+           sanitizer.escape(req.body.username);
+          console.log()
           if(accept.type(['application/json'])){
                reply.code(204).send({payload:`No User was found at ${req.params}`});
           }else{
-               reply.code(400).send({payload:`No User was found at ${req.params}`});
+               reply.code(400).send({payload:`Bad request`});
           }
 
 
@@ -85,7 +85,7 @@ fastify.setNotFoundHandler({
 fastify.setErrorHandler(function (err, req, reply) {
   if (err.statusCode === 401) {
     // this was unauthorized! Display the correct page/message.
-    reply.code(401).send({ was: 'unauthorized' })
+    reply.code(401).send({ payload: 'unauthorized' })
     return
   }
   reply.send(err)
