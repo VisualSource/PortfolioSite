@@ -4,6 +4,12 @@ const path = require("path");
 const wsHandler = require("./src/controllers/wsHandler");
 const controllers = require("./src/controllers/controllers")
 const fastify = require("fastify")({ logger: false });
+const authenticate = {realm: 'true'};
+async function validate (username, password, req, reply) {
+  if (username !== 'Tyrion' || password !== 'wine') {
+    return new Error('Winter is coming')
+  }
+}
 const knex = require('knex')({
   client:"pg",
   connection:{
@@ -14,6 +20,7 @@ const knex = require('knex')({
   }
 });
 fastify.register(require("fastify-websocket"));
+fastify.register(require('fastify-basic-auth'), { validate, authenticate })
 fastify.register(require("fastify-static"), {
   root: path.join(__dirname, "public")
 });
@@ -21,33 +28,21 @@ fastify.use(require("sanitize").middleware);
 
 fastify.get("/polytopia", { websocket: true }, wsHandler);
 
-fastify
-  .decorate('verifyUserAndPassword', async (request, reply)=> {
-    let test = await request;
-    return new Error("Just What we need")
-  })
-  .register(require('fastify-auth'))
+
+  fastify.register(require('fastify-auth'))
   .after(() => {
     fastify.route({
-      method: 'GET',
-      url: '/auth',
+      method: 'POST',
+      url: '/user/:id',
       preHandler: fastify.auth([
-        fastify.verifyUserAndPassword
+        fastify.basicAuth
       ]),
       handler: (req, reply) => {
-        req.log.info('Auth route')
-        reply.send({ hello: "test" })
+          console.log(req.params)
+        reply.code(204).send({payload:"No User was found"});
       }
     })
   });
-
-fastify.route({
-  method: "POST",
-  url:"/user/:id",
-  handler:(req,reply)=>{
-    reply.status(400).send({http:"No Content"})
-  }
-});
 
 fastify.route({
   method: "POST",
@@ -63,8 +58,7 @@ fastify.get("/", async (request, reply) => {
   reply.sendFile("index.html");
 });
 
-fastify.setNotFoundHandler(
-  {
+fastify.setNotFoundHandler({
     preValidation: (req, reply, done) => {
       done();
     },
@@ -76,6 +70,15 @@ fastify.setNotFoundHandler(
     reply.sendFile("404.html");
   }
 );
+
+fastify.setErrorHandler(function (err, req, reply) {
+  if (err.statusCode === 401) {
+    // this was unauthorized! Display the correct page/message.
+    reply.code(401).send({ was: 'unauthorized' })
+    return
+  }
+  reply.send(err)
+})
 
 const start = async () => {
   try {

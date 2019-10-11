@@ -46,13 +46,8 @@ const wsHandler = (con,req,params)=>{
              send({status: 204})
             break;
         case "EXIT":
-<<<<<<< HEAD
-            send({status: 202})
-            con.socket.terminate();
-=======
             con.socket.send(JSON.stringify({status:200}));
             con.socket.close(1000,"Exit websocket");
->>>>>>> 7d6d0463684afb747c84561188cc78fd132b2158
             break;
         default:
              send({status: 400})
