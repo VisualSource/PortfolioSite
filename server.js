@@ -4,10 +4,12 @@ const path = require("path");
 const wsHandler = require("./src/controllers/wsHandler");
 const controllers = require("./src/controllers/controllers")
 const fastify = require("fastify")({ logger: false });
-const authenticate = {realm: 'true'};
+const authenticate = {realm: 'polytopia'};
+const sanitizer = require('sanitizer');
+//curl localhost:8000/user/BoomIsHere -X POST -i -H "Content-Type: application/json"  --user Tyrion:wine -d '@test.json'
 async function validate (username, password, req, reply) {
   if (username !== 'Tyrion' || password !== 'wine') {
-    return new Error('Winter is coming')
+    return new Error('No User found!')
   }
 }
 const knex = require('knex')({
@@ -20,11 +22,11 @@ const knex = require('knex')({
   }
 });
 fastify.register(require("fastify-websocket"));
+fastify.register(require('fastify-accepts'))
 fastify.register(require('fastify-basic-auth'), { validate, authenticate })
 fastify.register(require("fastify-static"), {
   root: path.join(__dirname, "public")
 });
-fastify.use(require("sanitize").middleware);
 
 fastify.get("/polytopia", { websocket: true }, wsHandler);
 
@@ -38,8 +40,17 @@ fastify.get("/polytopia", { websocket: true }, wsHandler);
         fastify.basicAuth
       ]),
       handler: (req, reply) => {
-          console.log(req.params)
-        reply.code(204).send({payload:"No User was found"});
+           const accept = req.accepts()
+          console.log(req.body)
+          console.log(sanitizer.sanitize(req.body.username))
+          if(accept.type(['application/json'])){
+               reply.code(204).send({payload:`No User was found at ${req.params}`});
+          }else{
+               reply.code(400).send({payload:`No User was found at ${req.params}`});
+          }
+
+
+
       }
     })
   });
