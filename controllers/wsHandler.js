@@ -1,16 +1,4 @@
-/**
- * 2xx Succes
- *  200 Ok
- *  202 Accepted
- *  204 No Content
- * 4xx Client Errors
- *  400 Bad Request
- *  401 unauthorized
- *  403 Forbidden
- *  404 Not Found
- *  406 Not Acceptable
- *  409 Conflict
- */
+//const knex = require("./db");
 /**
  * @param {} req
  * @param {WebSocket} con

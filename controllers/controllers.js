@@ -1,30 +1,40 @@
+const fastify = require('../server')
+//const knex = require("./db");
+
+
+
 
 /**
- * 2xx Succes
- *
- *  200 Ok
- *  202 Accepted
- *  204 No Content
- *
- *
- * 4xx Client Errors
- *
- *  400 Bad Request
- *  401 unauthorized
- *  403 Forbidden
- *  404 Not Found
- *  406 Not Acceptable
- *  409 Conflict
+ * validate a user
+ * @param {string} username 
+ * @param {string} password 
+ * @param {FastifyRequest} req 
+ * @param {FastifyReply} reply 
  */
-const getThrownRoomData = async(req,rep)=>{
+async function validate (username, password, req, reply) {
+    if (username !== 'Tyrion' || password !== 'wine') {
+      return new Error('No User found!')
+    }
+  }
+
+
+
+
+
+
+const ThrownRoom = async(req,rep)=>{
      let data = req.params.faction
      return data;
 }
 
-module.export = {getThrownRoomData}
+
+
+
+
+
+module.exports = {ThrownRoom,validate}
 
 /*
-const DATABASE_URL = process.env.DATABASE_URL || "http://localhost:5001";
 let bcrypt;
 let db;
 const handleLoginIn = (req, res)=>{

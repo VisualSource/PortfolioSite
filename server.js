@@ -1,48 +1,50 @@
+//env vars
 const PORT = process.env.PORT || 8000;
-const DATABASE_URL = process.env.DATABASE_URL || "localhost:5432";
-const path = require("path");
-const wsHandler = require("./src/controllers/wsHandler");
-const controllers = require("./src/controllers/controllers")
-const fastify = require("fastify")({ logger: false });
-const authenticate = {realm: 'polytopia'};
-const sanitizer = require('sanitizer');
-//curl localhost:8000/user/BoomIsHere -X POST -i -H "Content-Type: application/json"  --user Tyrion:wine -d '@test.json'
-async function validate (username, password, req, reply) {
-  if (username !== 'Tyrion' || password !== 'wine') {
-    return new Error('No User found!')
-  }
-}
-const knex = require('knex')({
-  client:"pg",
-  connection:{
-    host:DATABASE_URL,
-    user:"postgres",
-    password:"root",
-    database:"visualsource"
-  }
-});
-fastify.register(require("fastify-websocket"));
-fastify.register(require('fastify-accepts'))
-fastify.register(require('fastify-basic-auth'), { validate, authenticate })
-fastify.register(require("fastify-static"), {
-  root: path.join(__dirname, "public")
-});
 
+//node modules
+const path = require("path");
+const fs = require("fs");
+
+// custom files
+const controllers = require('./controllers/controllers');
+const wsHandler = require("./controllers/wsHandler");
+
+//npm modules
+const fastify = require("fastify")({ //curl localhost:8000/user/BoomIsHere -X POST -i -H "Content-Type: application/json" -k --user Tyrion:wine -d '@test.json'
+  http2: false,
+  https: {
+    key: fs.readFileSync('https/key.pem'),
+    cert: fs.readFileSync('https/server.crt')
+  }
+});
+const sanitizer = require('sanitizer');
+const helment = require('fastify-helmet');
+
+// auth
+const authenticate = {realm: 'polytopia'};
+
+// fastify plugins
+fastify.register(require("fastify-websocket"));
+fastify.register(require('fastify-accepts'));
+fastify.register(require('fastify-cookie'))
+fastify.register(helment,{dnsPrefetchControl: false,})
+fastify.register(require('fastify-basic-auth'), { validate: controllers.validate, authenticate })
+fastify.register(require("fastify-static"), {root: path.join(__dirname, "public")});
+
+
+//websocket
 fastify.get("/polytopia", { websocket: true }, wsHandler);
 
-
+// routes
   fastify.register(require('fastify-auth'))
   .after(() => {
     fastify.route({
       method: 'POST',
       url: '/user/:id',
-      preHandler: fastify.auth([
-        fastify.basicAuth
-      ]),
+      preHandler: fastify.auth([fastify.basicAuth]),
       handler: (req, reply) => {
            const accept = req.accepts()
-           sanitizer.escape(req.body.username);
-          console.log()
+          console.log(sanitizer.escape(req.body.username))
           if(accept.type(['application/json'])){
                reply.code(204).send({payload:`No User was found at ${req.params}`});
           }else{
@@ -64,33 +66,39 @@ fastify.route({
 });
 
 
-fastify.post("/throneroom/:faction", ()=>{});
-fastify.get("/", async (request, reply) => {
-  reply.sendFile("index.html");
+fastify.post("/throneroom/:faction", controllers.ThrownRoom);
+
+fastify.get("/", async (request, reply) => { reply.sendFile("index.html"); });
+
+
+// handlers
+fastify.setNotFoundHandler({
+       preValidation: (req, reply, done) => { done(); },
+       preHandler: (req, reply, done) => { done(); }
+  },
+  (request, reply) => { reply.sendFile("404.html");}
+);
+/**
+ * 2xx Succes
+ *  200 Ok
+ *  202 Accepted
+ *  204 No Content
+ * 4xx Client Errors
+ *  400 Bad Request
+ *  401 unauthorized
+ *  403 Forbidden
+ *  404 Not Found
+ *  406 Not Acceptable
+ *  409 Conflict
+ */
+fastify.setErrorHandler( (err, req, reply) => {
+  if (err.statusCode === 401) { reply.code(401).send({ payload: 'unauthorized' }) }
+  reply.send(err.statusCode)
 });
 
-fastify.setNotFoundHandler({
-    preValidation: (req, reply, done) => {
-      done();
-    },
-    preHandler: (req, reply, done) => {
-      done();
-    }
-  },
-  (request, reply) => {
-    reply.sendFile("404.html");
-  }
-);
 
-fastify.setErrorHandler(function (err, req, reply) {
-  if (err.statusCode === 401) {
-    // this was unauthorized! Display the correct page/message.
-    reply.code(401).send({ payload: 'unauthorized' })
-    return
-  }
-  reply.send(err)
-})
 
+// start
 const start = async () => {
   try {
     await fastify.listen(PORT);
@@ -101,3 +109,4 @@ const start = async () => {
   }
 };
 start();
+module.exports = fastify;
