@@ -14,6 +14,8 @@ const escapeString = require('sql-string-escape')
  // create user with password then bcrypt => base64 = user id
 async function validate (username, password, req, reply) {
     try{
+     // encode Buffer.from("Hello World").toString('base64')
+     // decode Buffer.from("SGVsbG8gV29ybGQ=", 'base64').toString('ascii')
        let buff = new Buffer.from(req.headers.authorization.replace("Basic ",""), 'base64');
        let text = buff.toString('acsii');
         console.log(buff,text)
