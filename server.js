@@ -16,7 +16,7 @@ const wsHandler = require("./controllers/wsHandler");
     cert: fs.readFileSync('https/server.crt')
   }
  */
-const fastify = require("fastify")({ //curl localhost:8000/user/BoomIsHere -X POST -i -H "Content-Type: application/json" -k --user Tyrion:wine -d '@test.json'
+const fastify = require("fastify")({ //curl localhost:8000/user/BoomIsHere -X POST -i -H @header.text -d '@test.json'
   http2: false,
 });
 const sanitizer = require('sanitizer');

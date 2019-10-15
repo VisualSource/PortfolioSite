@@ -14,12 +14,11 @@ const escapeString = require('sql-string-escape')
  // create user with password then bcrypt => base64 = user id
 async function validate (username, password, req, reply) {
     try{
-        let buff = new Buffer.from(req.headers.authorization, 'base64');
-        let text = buff.toString('acsii');
-        console.log(req.headers.authorization)
+       let buff = new Buffer.from(req.headers.authorization.replace("Basic ",""), 'base64');
+       let text = buff.toString('acsii');
+        console.log(buff,text)
         // bcrypit username and password only because the base64 is already undone
         let validUsername = bcrypt.compareSync("BoomIsHere", username)
-        console.log(validUsername)
 
         if(false){
             return new Error("Invalid")
