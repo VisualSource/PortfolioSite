@@ -10,12 +10,14 @@ const controllers = require('./controllers/controllers');
 const wsHandler = require("./controllers/wsHandler");
 
 //npm modules
-const fastify = require("fastify")({ //curl localhost:8000/user/BoomIsHere -X POST -i -H "Content-Type: application/json" -k --user Tyrion:wine -d '@test.json'
-  http2: false,
-  https: {
+/**
+ https: {
     key: fs.readFileSync('https/key.pem'),
     cert: fs.readFileSync('https/server.crt')
   }
+ */
+const fastify = require("fastify")({ //curl localhost:8000/user/BoomIsHere -X POST -i -H "Content-Type: application/json" -k --user Tyrion:wine -d '@test.json'
+  http2: false,
 });
 const sanitizer = require('sanitizer');
 const helment = require('fastify-helmet');
@@ -36,38 +38,24 @@ fastify.register(require("fastify-static"), {root: path.join(__dirname, "public"
 fastify.get("/polytopia", { websocket: true }, wsHandler);
 
 // routes
-  fastify.register(require('fastify-auth'))
-  .after(() => {
+fastify.register(require('fastify-auth'))
+.after(() => {
     fastify.route({
       method: 'POST',
       url: '/user/:id',
       preHandler: fastify.auth([fastify.basicAuth]),
       handler: (req, reply) => {
            const accept = req.accepts()
-          console.log(sanitizer.escape(req.body.username))
           if(accept.type(['application/json'])){
                reply.code(204).send({payload:`No User was found at ${req.params}`});
           }else{
                reply.code(400).send({payload:`Bad request`});
           }
-
-
-
       }
-    })
-  });
-
-fastify.route({
-  method: "POST",
-  url:"/login",
-  handler:(req,reply)=>{
-    reply.status(400).send({http:"No Content"})
-  }
-});
-
-
-fastify.post("/throneroom/:faction", controllers.ThrownRoom);
-
+    })});
+fastify.route(controllers.routeLogin);
+fastify.route(controllers.routeThrownRoom);
+fastify.route(controllers.routeRegister);
 fastify.get("/", async (request, reply) => { reply.sendFile("index.html"); });
 
 
@@ -95,8 +83,6 @@ fastify.setErrorHandler( (err, req, reply) => {
   if (err.statusCode === 401) { reply.code(401).send({ payload: 'unauthorized' }) }
   reply.send(err.statusCode)
 });
-
-
 
 // start
 const start = async () => {
