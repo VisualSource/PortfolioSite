@@ -18,8 +18,8 @@ const wsHandler = require("./controllers/wsHandler");
  */
 const fastify = require("fastify")({ //curl localhost:8000/user/BoomIsHere -X POST -i -H @header.text -d '@test.json'
   http2: false,
+  
 });
-const sanitizer = require('sanitizer');
 const helment = require('fastify-helmet');
 
 // auth
@@ -43,15 +43,8 @@ fastify.register(require('fastify-auth'))
     fastify.route({
       method: 'POST',
       url: '/user/:id',
-      preHandler: fastify.auth([fastify.basicAuth]),
-      handler: (req, reply) => {
-           const accept = req.accepts()
-          if(accept.type(['application/json'])){
-               reply.code(204).send({payload:`No User was found at ${req.params}`});
-          }else{
-               reply.code(400).send({payload:`Bad request`});
-          }
-      }
+      preHandler: [controllers.checkOrgin,fastify.auth([fastify.basicAuth])],
+      handler: controllers.getUser
     })});
 fastify.route(controllers.routeLogin);
 fastify.route(controllers.routeThrownRoom);
