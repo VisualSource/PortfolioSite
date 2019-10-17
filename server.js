@@ -9,7 +9,7 @@ const fs = require("fs");
 const controllers = require('./controllers/controllers');
 const wsHandler = require("./controllers/wsHandler");
 
-//npm modules
+
 /**
  https: {
     key: fs.readFileSync('https/key.pem'),
@@ -18,19 +18,21 @@ const wsHandler = require("./controllers/wsHandler");
  */
 const fastify = require("fastify")({ //curl localhost:8000/user/BoomIsHere -X POST -i -H @header.text -d '@test.json'
   http2: false,
-  
+
 });
 const helment = require('fastify-helmet');
-
-// auth
-const authenticate = {realm: 'polytopia'};
-
 // fastify plugins
-fastify.register(require("fastify-websocket"));
-fastify.register(require('fastify-accepts'));
+// request X-Authtoken header
+fastify.register(require("fastify-websocket"),{options:{clientTracking: true,verifyClient: (info,next)=>{
+     try{
+         if(info.req.headers['x-authtoken']) next(true);
+     }catch(err){
+       next(false);
+     }
+}}});
 fastify.register(require('fastify-cookie'));
 fastify.register(helment,{dnsPrefetchControl: false,})
-fastify.register(require('fastify-basic-auth'), { validate: controllers.validate, authenticate })
+fastify.register(require('fastify-basic-auth'), { validate: controllers.validate, authenticate:{realm: 'polytopia'} })
 fastify.register(require("fastify-static"), {root: path.join(__dirname, "public")});
 
 

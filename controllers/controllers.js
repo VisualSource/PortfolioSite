@@ -7,9 +7,9 @@ const ids = require("./constents");
 /**
  * =================================================================
  * =================================================================
- * 
+ *
  *  Start of defined routes
- * 
+ *
  * =================================================================
  * =================================================================
  */
@@ -18,7 +18,7 @@ const ids = require("./constents");
   *  Route for getting a faction's scores.
   *  @returns object with socres for {:faction}
   *  @acceptes { "ammount": 100 }
-  * 
+  *
   */
 const routeThrownRoom = {
     method: "POST",
@@ -55,7 +55,7 @@ const routeCreate = {
     }
 }
 /**
- * Route for user registering 
+ * Route for user registering
  * @returns user id as a cookie
  */
 const routeRegister = {
@@ -96,14 +96,14 @@ const routeRegister = {
                             inGames: [],
                             savedOnlineGames:[]
                         }
-                    }).then(data=>{reply.setCookie('auth', id[0].auth,{path:'/'}).code(200).send({payload: data[0]})})
+                    }).then(data=>{reply.setCookie('X-AuthTokencle', id[0].auth,{path:'/'}).code(200).send({payload: data[0]})})
                  }).then(trx.commit).catch(trx.rollback)
              })
              .catch(err=>{reply.code(400).send({error:"Invalid"})})
     }
 }
 /**
- * Route for user login 
+ * Route for user login
  * @returns user data object and/or auth cookie
  */
 const routeLogin = {
@@ -133,7 +133,7 @@ const routeLogin = {
  * @param {FastifyReply} reply
  */
 function getUser(req,reply){
-        reply.code(501).send({error:`No User was found at ${req.params.id} or ${req.body.request}`}); 
+        reply.code(501).send({error:`No User was found at ${req.params.id} or ${req.body.request}`});
 }
 
  // encode Buffer.from("Hello World").toString('base64')
@@ -141,9 +141,9 @@ function getUser(req,reply){
 /**
  * =================================================================
  * =================================================================
- * 
+ *
  *  End of defined routes
- * 
+ *
  * =================================================================
  * =================================================================
  */
@@ -185,7 +185,7 @@ function checkOrgin(req,reply,done){
     }else{
         reply.code(403).send({error:"Invalid host"})
     }
-    
+
 }
 /**
  * sql string escape function
