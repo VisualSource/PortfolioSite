@@ -22,8 +22,5 @@ const wsHandler = (con,req,params)=>{
 
  con.socket.on('message',msg=>{ console.log(msg);});
 
-
-
-
 }
 module.exports = wsHandler;
