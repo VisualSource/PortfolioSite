@@ -28,7 +28,7 @@ const authenticate = {realm: 'polytopia'};
 // fastify plugins
 fastify.register(require("fastify-websocket"));
 fastify.register(require('fastify-accepts'));
-fastify.register(require('fastify-cookie'))
+fastify.register(require('fastify-cookie'));
 fastify.register(helment,{dnsPrefetchControl: false,})
 fastify.register(require('fastify-basic-auth'), { validate: controllers.validate, authenticate })
 fastify.register(require("fastify-static"), {root: path.join(__dirname, "public")});
@@ -49,6 +49,7 @@ fastify.register(require('fastify-auth'))
 fastify.route(controllers.routeLogin);
 fastify.route(controllers.routeThrownRoom);
 fastify.route(controllers.routeRegister);
+fastify.route(controllers.routeCreate);
 fastify.get("/", async (request, reply) => { reply.sendFile("index.html"); });
 
 

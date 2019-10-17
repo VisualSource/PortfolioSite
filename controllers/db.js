@@ -8,7 +8,7 @@ const knex = require('knex')({
       database:"visualsource",
       port: "5433"
     },
-    debug: true,
-    asyncStackTraces: true
+    debug: false,
+    asyncStackTraces: false
   });
   module.exports = knex;

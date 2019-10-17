@@ -1,7 +1,9 @@
 const sanitizer = require('sanitizer');
 const bcrypt = require('bcrypt');
 const uuidv4 = require('uuid/v4');
-const knex = require('./db')
+const uuidv5 = require('uuid/v5');
+const knex = require('./db');
+const ids = require("./constents");
 /**
  * =================================================================
  * =================================================================
@@ -15,6 +17,7 @@ const knex = require('./db')
  /**
   *  Route for getting a faction's scores.
   *  @returns object with socres for {:faction}
+  *  @acceptes { "ammount": 100 }
   * 
   */
 const routeThrownRoom = {
@@ -22,8 +25,33 @@ const routeThrownRoom = {
     url: "/throneroom/:faction",
     preHandler: checkOrgin,
     handler: async(req,rep)=>{
-         let data = await knex.select(req.params.faction).from('score').where('faction','=',req.params.faction).catch(err=>{rep.code(404).send({payload:"Could not find resource."})});
-         return data;
+         let data = await knex.column(req.params.faction).select().from('score').then(res=>res).catch(err=>{rep.code(404).send({error:"Could not find resource."})});
+         return {payload: data};
+    }
+}
+/**
+ * Route for getting uuid and other data need form client
+ * @acceptes { "request": "uuid" }
+ */
+const routeCreate = {
+    method: "POST",
+    url: "/create",
+    preHandler: checkOrgin,
+    handler: async(req,rep)=>{
+        try{
+            if(!req.body || !req.body.request){
+                throw new Error("No request or no data.")
+            }
+        }catch(err){
+            rep.code(400).send({error:"Invalid request"});
+        }
+        switch (req.body.request) {
+            case "uuid":
+                return { uuid: uuidv5(ids.APP_NAMESPACE_NAME,ids.APP_NAMESPACE_ID)}
+            default:
+                rep.code(400).send({error:"Invalid"});
+                break;
+        }
     }
 }
 /**
@@ -38,10 +66,10 @@ const routeRegister = {
       try{
             // check for empty body params
             if(!req.body.username || !req.body.password){
-                return new Error("Invalid")
+               throw new Error("Invalid");
             }
         }catch(err){
-            reply.code(400).send("Invalid")
+            reply.code(400).send({error:"Invalid"})
         }
              // escape html and sql strings
              const username = await escapeString(sanitizer.escape(req.body.username));
@@ -71,7 +99,7 @@ const routeRegister = {
                     }).then(data=>{reply.setCookie('auth', id[0].auth,{path:'/'}).code(200).send({payload: data[0]})})
                  }).then(trx.commit).catch(trx.rollback)
              })
-             .catch(err=>{reply.code(400).send("Invalid")})
+             .catch(err=>{reply.code(400).send({error:"Invalid"})})
     }
 }
 /**
@@ -84,7 +112,7 @@ const routeLogin = {
   preHandler: checkOrgin,
   handler:(req,reply)=>{
       if(!req.body.username || !req.body.password){
-          reply.code(400).send({payload:"Invalid submission"})
+          reply.code(400).send({error:"Invalid submission"})
       }
       const username =  escapeString(sanitizer.escape(req.body.username));
       const password = escapeString(sanitizer.escape(req.body.password));
@@ -92,11 +120,11 @@ const routeLogin = {
       .then(async (data)=>{
           const isValid =  await bcrypt.compare(password, data[0].hash);
           if(isValid){
-             knex.select().from('user').where('username','=',username).then(user=>reply.code(200).send(user[0])).catch(err=>{reply.code(500).send({payload:"Failed to get user."})})
+             knex.select("username","data").from('user').where('username','=',username).then(user=>reply.code(200).send({payload: user[0]})).catch(err=>{reply.code(500).send({error:"Failed to get user."})})
           }else{
-              reply.code(400).send({payload:"Invalid Credentials."})
+              reply.code(400).send({error:"Invalid Credentials."})
           }
-      }).catch(err=>{reply.code(404).send({payload:"Could not find user."})})
+      }).catch(err=>{reply.code(404).send({error:"Could not find user."})})
   }
 }
 /**
@@ -105,7 +133,7 @@ const routeLogin = {
  * @param {FastifyReply} reply
  */
 function getUser(req,reply){
-        reply.code(200).send({payload:`No User was found at ${req.params}`}); 
+        reply.code(501).send({error:`No User was found at ${req.params.id} or ${req.body.request}`}); 
 }
 
  // encode Buffer.from("Hello World").toString('base64')
@@ -132,11 +160,10 @@ function getUser(req,reply){
  // create user with password then bcrypt => base64 = user id
  async function validate (username, password, req, reply) {
     try{
-        let header = Buffer.from(req.headers.authorization.replace("Basic ",""),"base64").toString('utf8');
-        let data = await knex.select('username',"id").from("login").where("auth","=", header)
+        let data = await knex.select('username',"id").from("login").where("auth","=", req.headers.authorization.replace("Basic ","")).then(res=>res[0]);
         // bcrypit username and password only because the base64 is already undone
-        let validUsername = await bcrypt.compare("'BoomIsHere'" ,username);
-        let validPassword = await bcrypt.compare("'Taylor01'",password);
+        let validUsername = await bcrypt.compare(data.username ,username);
+        let validPassword = await bcrypt.compare(data.id,password);
         if(!validUsername && !validPassword){
             return new Error("Invalid")
         }
@@ -153,10 +180,10 @@ function getUser(req,reply){
  * @param {Function} done
  */
 function checkOrgin(req,reply,done){
-    if(req.hostname == "localhost:8000" || req.hostname == "visualsource.webhostapp.com" || req.hostname == "visualsource.herokuapp.com" || req.hostname === "localhost:5432"){
+    if(req.hostname == "localhost:8000" || req.hostname == "visualsource.webhostapp.com" || req.hostname == "visualsource.herokuapp.com"){
        done()
     }else{
-        reply.code(403).send("Invalid host.")
+        reply.code(403).send({error:"Invalid host"})
     }
     
 }
@@ -191,4 +218,4 @@ function escapeString (str) {
     });
 }
 
-module.exports = {validate, checkOrgin, routeLogin, routeThrownRoom, routeRegister, getUser}
+module.exports = {validate, checkOrgin, routeLogin, routeThrownRoom, routeRegister, routeCreate, getUser}
