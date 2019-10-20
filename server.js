@@ -16,22 +16,27 @@ const wsHandler = require("./controllers/wsHandler");
     cert: fs.readFileSync('https/server.crt')
   }
  */
-const fastify = require("fastify")({ //curl localhost:8000/user/BoomIsHere -X POST -i -H @header.text -d '@test.json'
+const fastify = require("fastify")({
   http2: false,
+  logger: false
 
 });
 const helment = require('fastify-helmet');
 // fastify plugins
 // request X-Authtoken header
-fastify.register(require("fastify-websocket"),{options:{clientTracking: true,verifyClient: (info,next)=>{
+fastify.register(require("fastify-websocket"),{options:{clientTracking: true, verifyClient: (info,next)=>{
      try{
-         if(info.req.headers['x-authtoken']) next(true);
+         //if(info.req.headers['x-authtoken']) next(true);
+         next(true);
      }catch(err){
        next(false);
      }
 }}});
 fastify.register(require('fastify-cookie'));
-fastify.register(helment,{dnsPrefetchControl: false,})
+fastify.register(helment,{dnsPrefetchControl: false,});
+fastify.register(require('fastify-cors'), { 
+ origin: ["http://127.0.0.1:5500","https://127.0.0.1:8000","http://127.0.0.1:8000","https://visualsource.000webhostapp.com","https://visualsource.herokuapp.com/"]
+});
 fastify.register(require('fastify-basic-auth'), { validate: controllers.validate, authenticate:{realm: 'polytopia'} })
 fastify.register(require("fastify-static"), {root: path.join(__dirname, "public")});
 
@@ -45,7 +50,7 @@ fastify.register(require('fastify-auth'))
     fastify.route({
       method: 'POST',
       url: '/user/:id',
-      preHandler: [controllers.checkOrgin,fastify.auth([fastify.basicAuth])],
+      preHandler: [fastify.auth([fastify.basicAuth])],
       handler: controllers.getUser
     })});
 fastify.route(controllers.routeLogin);
@@ -53,6 +58,7 @@ fastify.route(controllers.routeThrownRoom);
 fastify.route(controllers.routeRegister);
 fastify.route(controllers.routeCreate);
 fastify.get("/", async (request, reply) => { reply.sendFile("index.html"); });
+
 
 
 // handlers
@@ -77,7 +83,7 @@ fastify.setNotFoundHandler({
  */
 fastify.setErrorHandler( (err, req, reply) => {
   if (err.statusCode === 401) { reply.code(401).send({ payload: 'unauthorized' }) }
-  reply.send(err.statusCode)
+  reply.send({error: err.statusCode})
 });
 
 // start

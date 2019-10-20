@@ -23,7 +23,7 @@ const ids = require("./constents");
 const routeThrownRoom = {
     method: "POST",
     url: "/throneroom/:faction",
-    preHandler: checkOrgin,
+    preHandler: [makeBodyJson],
     handler: async(req,rep)=>{
          let data = await knex.column(req.params.faction).select().from('score').then(res=>res).catch(err=>{rep.code(404).send({error:"Could not find resource."})});
          return {payload: data};
@@ -36,21 +36,21 @@ const routeThrownRoom = {
 const routeCreate = {
     method: "POST",
     url: "/create",
-    preHandler: checkOrgin,
-    handler: async(req,rep)=>{
+    preHandler: [makeBodyJson],
+    handler: async(req,reply)=>{
         try{
             if(!req.body || !req.body.request){
                 throw new Error("No request or no data.")
             }
+            switch (req.body.request) {
+                case "uuid":
+                    reply.code(200).send({ uuid: uuidv5(ids.APP_NAMESPACE_NAME,ids.APP_NAMESPACE_ID)});
+                default:
+                    reply.code(400).send({error:"Invalid"});
+                    break;
+            }
         }catch(err){
-            rep.code(400).send({error:"Invalid request"});
-        }
-        switch (req.body.request) {
-            case "uuid":
-                return { uuid: uuidv5(ids.APP_NAMESPACE_NAME,ids.APP_NAMESPACE_ID)}
-            default:
-                rep.code(400).send({error:"Invalid"});
-                break;
+            reply.code(400).send({error:"Invalid request"});
         }
     }
 }
@@ -61,7 +61,7 @@ const routeCreate = {
 const routeRegister = {
     method: "POST",
     url: "/register",
-    preHandler: checkOrgin,
+    preHandler: [makeBodyJson],
     handler: async(req,reply)=>{
       try{
             // check for empty body params
@@ -96,7 +96,7 @@ const routeRegister = {
                             inGames: [],
                             savedOnlineGames:[]
                         }
-                    }).then(data=>{reply.setCookie('X-AuthTokencle', id[0].auth,{path:'/'}).code(200).send({payload: data[0]})})
+                    }).then(data=>{reply.setCookie('X-AuthToken', id[0].auth,{path:'/'}).code(200).send({payload: data[0]})})
                  }).then(trx.commit).catch(trx.rollback)
              })
              .catch(err=>{reply.code(400).send({error:"Invalid"})})
@@ -109,22 +109,39 @@ const routeRegister = {
 const routeLogin = {
   method: "POST",
   url:"/login",
-  preHandler: checkOrgin,
+  preHandler: [makeBodyJson],
   handler:(req,reply)=>{
-      if(!req.body.username || !req.body.password){
-          reply.code(400).send({error:"Invalid submission"})
+      try{
+        let needsCookie = false;
+        if(!req.cookies['x-authtoken'] || (req.body.save_login === true)){
+            needsCookie = true; 
+        }
+        if(!req.body.username || !req.body.password){
+                throw new Error("Invalid")
+        }
+        const username =  escapeString(sanitizer.escape(req.body.username));
+        const password = escapeString(sanitizer.escape(req.body.password));
+        knex.select('username','hash').from('login').where('username','=', username)
+        .then(async (data)=>{
+            const isValid =  await bcrypt.compare(password, data[0].hash);
+            if(isValid){
+               knex.select("username","data","id").from('user').where('username','=',username).then(user=>{
+                  if(needsCookie){
+                      knex.select("auth").from("login").where("id","=",user[0].id).then(res=>{
+                        reply.setCookie('X-AuthToken', res[0].auth,{path:'/',  maxAge: 30*24*60*60*1000 }).code(200).send({payload: {username: user[0].username, data: user[0].data }});
+                      })
+                  }else{
+                    reply.code(200).send({payload: user[0]});
+                  }
+        
+              }).catch(err=>{reply.code(500).send({error:"Failed to get user."})})
+            }else{
+                reply.code(400).send({error:"Invalid Credentials."})
+            }
+        }).catch(err=>{reply.code(404).send({error:"Could not find user."})});
+      }catch(err){
+        reply.code(400).send({error:"Invalid submission"})
       }
-      const username =  escapeString(sanitizer.escape(req.body.username));
-      const password = escapeString(sanitizer.escape(req.body.password));
-      knex.select('username','hash').from('login').where('username','=', username)
-      .then(async (data)=>{
-          const isValid =  await bcrypt.compare(password, data[0].hash);
-          if(isValid){
-             knex.select("username","data").from('user').where('username','=',username).then(user=>reply.code(200).send({payload: user[0]})).catch(err=>{reply.code(500).send({error:"Failed to get user."})})
-          }else{
-              reply.code(400).send({error:"Invalid Credentials."})
-          }
-      }).catch(err=>{reply.code(404).send({error:"Could not find user."})})
   }
 }
 /**
@@ -166,26 +183,26 @@ function getUser(req,reply){
         let validPassword = await bcrypt.compare(data.id,password);
         if(!validUsername && !validPassword){
             return new Error("Invalid")
+        }else{
+            return {accepted: true, id: data.id};
         }
+        
     }catch(err){
         return new Error("Invalid User")
     }
 
   }
-/**
- * check host of request
- *
- * @param {*} req
- * @param {*} reply
- * @param {Function} done
- */
-function checkOrgin(req,reply,done){
-    if(req.hostname == "localhost:8000" || req.hostname == "visualsource.webhostapp.com" || req.hostname == "visualsource.herokuapp.com"){
-       done()
-    }else{
-        reply.code(403).send({error:"Invalid host"})
-    }
 
+
+
+function makeBodyJson(req,reply,done){
+    try {
+        const data = JSON.parse(req.body);
+        req.body = data;
+        done();
+    } catch (error) {
+        done()
+    }
 }
 /**
  * sql string escape function
@@ -218,4 +235,4 @@ function escapeString (str) {
     });
 }
 
-module.exports = {validate, checkOrgin, routeLogin, routeThrownRoom, routeRegister, routeCreate, getUser}
+module.exports = {validate, routeLogin, routeThrownRoom, routeRegister, routeCreate, getUser}
