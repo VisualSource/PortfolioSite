@@ -1,4 +1,4 @@
-import {ws} from "./websocket.js"
+import {ws} from "../client_scripts/websocket.js"
 
 
 const Post = async(path,params)=>{
