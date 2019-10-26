@@ -96,7 +96,7 @@ function wsHandler(con,req){
             const data = JSON.parse(msg);
             switch (data.type) {
                 // SYSTEM RESPONSE
-                case "LOGIN":
+                case "LOGIN": {
                     let auth = Buffer.from(data.payload.authToken, 'base64').toString('utf8');
                     let vias = auth.split(":");
                     controllers.validate(vias[0],vias[1],{headers:{authorization: data.payload.authToken}}).then(res=>{
@@ -108,6 +108,7 @@ function wsHandler(con,req){
                         }
                     }).catch(res=>{send({type:"ERROR", statusCode: 400, date: Date.now()})})
                     break;
+                }
                 case "EXIT":
                     send({type:"EXIT", statusCode: 499, date: Date.now()});
                     con.socket.close(1000,"Normal Closure");
