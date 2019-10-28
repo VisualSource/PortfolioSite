@@ -31,7 +31,7 @@
     "fastify-helmet": "^3.0.2",
     "fastify-static": "^2.5.0",
     "fastify-websocket": "^0.6.0",
-    "knex": "^0.19.5",
+    "knex": "^0.20.0",
     "pg": "7.12.1",
     "sanitizer": "^0.1.3",
     "sql-string-escape": "^1.1.6",
