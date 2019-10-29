@@ -37,7 +37,6 @@ fastify.register(helment,{dnsPrefetchControl: false,});
 fastify.register(require('fastify-cors'), { 
  origin: ["http://127.0.0.1:5500","https://127.0.0.1:8000","http://127.0.0.1:8000","https://visualsource.000webhostapp.com","https://visualsource.herokuapp.com/"]
 });
-fastify.register(require('fastify-basic-auth'), { validate: controllers.validate, authenticate:{realm: 'polytopia'} })
 fastify.register(require("fastify-static"), {root: path.join(__dirname, "public")});
 
 
@@ -50,7 +49,7 @@ fastify.register(require('fastify-auth'))
     fastify.route({
       method: 'POST',
       url: '/user/:id',
-      preHandler: [fastify.auth([fastify.basicAuth])],
+      preHandler: [],
       handler: controllers.getUser
     })});
 fastify.route(controllers.routeLogin);

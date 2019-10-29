@@ -1,6 +1,5 @@
 //const knex = require("./db");
 //const ids = require("./constents");
-const controllers = require('./controllers');
 /** @type {object} */
 let userArray = {};
 /**
@@ -96,17 +95,7 @@ function wsHandler(con,req){
             const data = JSON.parse(msg);
             switch (data.type) {
                 // SYSTEM RESPONSE
-                case "LOGIN": {
-                    let auth = Buffer.from(data.payload.authToken, 'base64').toString('utf8');
-                    let vias = auth.split(":");
-                    controllers.validate(vias[0],vias[1],{headers:{authorization: data.payload.authToken}}).then(res=>{
-                        if(res.accepted){
-                            Object.assign(userArray, JSON.parse(`{"${res.id}":"${JSON.stringify(con.socket)}"}`));
-                            send({type:"SYSTEM", statusCode: 202, date: Date.now()});
-                        }else{
-                            send({type:"ERROR", statusCode: 401, date: Date.now()});
-                        }
-                    }).catch(res=>{send({type:"ERROR", statusCode: 400, date: Date.now()})})
+                case "LOGIN": { 
                     break;
                 }
                 case "EXIT":

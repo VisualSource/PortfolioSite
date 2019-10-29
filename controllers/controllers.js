@@ -166,33 +166,6 @@ function getUser(req,reply){
  */
 
 
-/**
- * validate a user
- * @param {string} username
- * @param {string} password
- * @param {FastifyRequest} req
- * @param {FastifyReply} reply
- */
-// neeeds header of Authorization: Basic USER:PSD
- // create user with password then bcrypt => base64 = user id
- async function validate (username, password, req, reply) {
-    try{
-        let data = await knex.select('username',"id").from("login").where("auth","=", req.headers.authorization.replace("Basic ","")).then(res=>res[0]);
-        // bcrypit username and password only because the base64 is already undone
-        let validUsername = await bcrypt.compare(data.username ,username);
-        let validPassword = await bcrypt.compare(data.id,password);
-        if(!validUsername && !validPassword){
-            return new Error("Invalid")
-        }else{
-            return {accepted: true, id: data.id};
-        }
-        
-    }catch(err){
-        return new Error("Invalid User")
-    }
-
-  }
-
 
 
 function makeBodyJson(req,reply,done){
@@ -235,4 +208,4 @@ function escapeString (str) {
     });
 }
 
-module.exports = {validate, routeLogin, routeThrownRoom, routeRegister, routeCreate, getUser}
+module.exports = {routeLogin, routeThrownRoom, routeRegister, routeCreate, getUser}
