@@ -4,6 +4,9 @@ const PORT = process.env.PORT || 8000;
 //node modules
 const path = require("path");
 const fs = require("fs");
+const fjwt = require('fastify-jwt-webapp')
+const helment = require('fastify-helmet');
+const fastify = require("fastify")({ http2: false, logger: false}); // https: { key: fs.readFileSync('https/key.pem'), cert: fs.readFileSync('https/server.crt') }
 
 // custom files
 const controllers = require('./controllers/controllers');
@@ -11,38 +14,14 @@ const wsHandler = require("./controllers/wsHandler");
 const constants = require("./controllers/constents");
 
 
-/**
- https: {
-    key: fs.readFileSync('https/key.pem'),
-    cert: fs.readFileSync('https/server.crt')
-  }
- */
-const fastify = require("fastify")({
-  http2: false,
-  logger: false
-
-});
-const fjwt = require('fastify-jwt-webapp')
-const helment = require('fastify-helmet');
 fastify.register(fjwt, constants.config);
-
-// fastify plugins
-// request X-Authtoken header
-fastify.register(require("fastify-websocket"),{options:{clientTracking: true, verifyClient: (info,next)=>{
-     try{
-         //if(info.req.headers['x-authtoken']) next(true);
-         next(true);
-     }catch(err){
-       next(false);
-     }
-}}});
+fastify.register(require("fastify-websocket"),{options:{clientTracking: true }});
 fastify.register(require('fastify-cookie'));
 fastify.register(helment,{dnsPrefetchControl: false,});
 fastify.register(require('fastify-cors'), {
  origin: ["http://127.0.0.1:5500","https://127.0.0.1:8000","http://127.0.0.1:8000","https://visualsource.000webhostapp.com","https://visualsource.herokuapp.com/"]
 });
 fastify.register(require("fastify-static"), {root: path.join(__dirname, "public")});
-
 
 //websocket
 fastify.get("/polytopia", { websocket: true }, wsHandler);

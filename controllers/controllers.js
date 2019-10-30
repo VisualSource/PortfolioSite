@@ -54,9 +54,31 @@ const routeCreate = {
         }
     }
 }
+const routeNewUser = {
+    method: "POST",
+    url: "/newuser",
+    preHandler: [makeBodyJson],
+    headler: async(req,reply)=>{
+
+        const {id} = req.body
+        knex.transaction(trx=>{
+                 trx.insert({
+                     id,
+                     data: {
+                       friends: [],
+                       inGames: [],
+                       savedOnlineGames:[],
+                       joined: new Date()
+                     }
+                 }).into('user').then(trx.commit).catch(trx.rollback)
+             })
+             .catch(err=>{reply.code(400).send({error:"Invalid"})})
+    }
+};
 /**
  * Route for user registering
  * @returns user id as a cookie
+  * @deprecated
  */
 const routeRegister = {
     method: "POST",
@@ -105,6 +127,7 @@ const routeRegister = {
 /**
  * Route for user login
  * @returns user data object and/or auth cookie
+  * @deprecated
  */
 const routeLogin = {
   method: "POST",
@@ -114,7 +137,7 @@ const routeLogin = {
       try{
         let needsCookie = false;
         if(!req.cookies['x-authtoken'] || (req.body.save_login === true)){
-            needsCookie = true; 
+            needsCookie = true;
         }
         if(!req.body.username || !req.body.password){
                 throw new Error("Invalid")
@@ -133,7 +156,7 @@ const routeLogin = {
                   }else{
                     reply.code(200).send({payload: user[0]});
                   }
-        
+
               }).catch(err=>{reply.code(500).send({error:"Failed to get user."})})
             }else{
                 reply.code(400).send({error:"Invalid Credentials."})
