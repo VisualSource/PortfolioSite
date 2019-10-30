@@ -56,9 +56,9 @@ fastify.register(require('fastify-auth'))
       preHandler: [],
       handler: controllers.getUser
     })});
-fastify.route(controllers.routeLogin);
+//fastify.route(controllers.routeLogin);
 fastify.route(controllers.routeThrownRoom);
-fastify.route(controllers.routeRegister);
+//fastify.route(controllers.routeRegister);
 fastify.route(controllers.routeCreate);
 fastify.get("/", async (request, reply) => { reply.sendFile("index.html"); });
 
