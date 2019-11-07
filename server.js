@@ -4,8 +4,8 @@ const PORT = process.env.PORT || 8000;
 //node modules
 const path = require("path");
 const fs = require("fs");
-const fjwt = require('fastify-jwt-webapp')
 const helment = require('fastify-helmet');
+const jwt = require('jsonwebtoken');
 const fastify = require("fastify")({ http2: false, logger: false}); // https: { key: fs.readFileSync('https/key.pem'), cert: fs.readFileSync('https/server.crt') }
 
 // custom files
@@ -13,8 +13,7 @@ const controllers = require('./controllers/controllers');
 const wsHandler = require("./controllers/wsHandler");
 const constants = require("./controllers/constents");
 
-
-fastify.register(fjwt, constants.config);
+;
 fastify.register(require("fastify-websocket"),{options:{clientTracking: true }});
 fastify.register(require('fastify-cookie'));
 fastify.register(helment,{dnsPrefetchControl: false,});
@@ -27,13 +26,23 @@ fastify.register(require("fastify-static"), {root: path.join(__dirname, "public"
 fastify.get("/polytopia", { websocket: true }, wsHandler);
 
 // routes
-fastify.register(require('fastify-auth'))
+fastify.decorate('bearerAuth', async function (request, reply) {
+    const requestKey = await request.headers.authorization.replace("Bearer ","");
+    const cert = await fs.readFile('./https/csr.pem');  // get public key
+   jwt.verify(requestKey, cert, function(err, decoded) {
+
+   console.log(decoded) // bar
+        return true
+    });
+
+  }).
+register(require('fastify-auth'))
 .after(() => {
     fastify.route({
       method: 'POST',
-      url: '/user/:id',
-      preHandler: [],
-      handler: controllers.getUser
+      url: '/adduser/:id',
+      preHandler: fastify.auth([fastify.bearerAuth]),
+      handler: controllers.routeAddUser
     })});
 //fastify.route(controllers.routeLogin);
 fastify.route(controllers.routeThrownRoom);

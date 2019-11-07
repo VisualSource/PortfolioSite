@@ -54,13 +54,8 @@ const routeCreate = {
         }
     }
 }
-const routeNewUser = {
-    method: "POST",
-    url: "/newuser",
-    preHandler: [makeBodyJson],
-    headler: async(req,reply)=>{
-
-        const {id} = req.body
+ async function routeAddUser(req,reply){
+        const id = req.params.id;
         knex.transaction(trx=>{
                  trx.insert({
                      id,
@@ -70,11 +65,11 @@ const routeNewUser = {
                        savedOnlineGames:[],
                        joined: new Date()
                      }
-                 }).into('user').then(trx.commit).catch(trx.rollback)
+                 }).into('user').then(reply.code(201).send("created")).then(trx.commit).catch(trx.rollback)
              })
              .catch(err=>{reply.code(400).send({error:"Invalid"})})
     }
-};
+
 /**
  * Route for user registering
  * @returns user id as a cookie
@@ -172,9 +167,6 @@ const routeLogin = {
  * @param {FastifyRequest} req
  * @param {FastifyReply} reply
  */
-function getUser(req,reply){
-        reply.code(501).send({error:`No User was found at ${req.params.id} or ${req.body.request}`});
-}
 
  // encode Buffer.from("Hello World").toString('base64')
 // decode Buffer.from("SGVsbG8gV29ybGQ=", 'base64').toString('ascii')
@@ -231,4 +223,4 @@ function escapeString (str) {
     });
 }
 
-module.exports = {routeLogin, routeThrownRoom, routeRegister, routeCreate, getUser}
+module.exports = {routeLogin, routeThrownRoom, routeRegister, routeCreate, routeAddUser}

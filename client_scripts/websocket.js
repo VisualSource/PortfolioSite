@@ -1,5 +1,5 @@
 
-// types 
+// types
 /**
  * @typedef ClientMessage
  * @type {object}
@@ -13,12 +13,12 @@
   * @type {object}
   * @property {string} type - type of message
   * @property {number} statusCode - status of request
-  * @property {object} data - returning data 
+  * @property {object} data - returning data
   * @property {Date} date - day and time sending message
-  * 
+  *
   */
 
- 
+
 
 
 const statusHandler = (status) =>{
@@ -54,7 +54,7 @@ const onOpenHandler = event=>{
     ws.readyState = ws.socket.readyState;
 }
 /**
- * @param {ServerMessage} msg 
+ * @param {ServerMessage} msg
  */
 const onMessageHandler = async(msg) =>{
    let data = await JSON.parse(msg.data);
@@ -83,17 +83,17 @@ const onErrorHandler = event =>{
      ws.readyState = ws.socket.readyState
 }
 /**
- * @typedef WS 
+ * @typedef WS
  * @type {object}
  * @property {WebSocket} socket
  * @property {number} readyState
  * @property {object[]} messageSystem
- * @property {object[]} messageGame 
+ * @property {object[]} messageGame
  * @property {object[]} getRequest
  * @property {function} currentRequest
- * @property {function} init 
+ * @property {function} init
  * @property {function} send
- * @property {function} quit 
+ * @property {function} quit
  * @property {function} reconecct
  */
 /**
@@ -102,27 +102,27 @@ const onErrorHandler = event =>{
  */
 export const ws = {
     /**
-     * @private 
+     * @private
      * @type {WebSocket} socket
      */
     socket: null,
      /**
-     * @private 
+     * @private
      * @type {number} state
      */
     readyState: "CLOSED",
      /**
-     * @private 
+     * @private
      * @type {object[]} socket
      */
     messageSystem: [],
     /**
-     * @private 
+     * @private
      * @type {object[]} socket
      */
     messageGame: [],
     /**
-     * @private 
+     * @private
      * @type {object[]} socket
      */
     getRequest: [],
@@ -132,7 +132,7 @@ export const ws = {
     currentRequest: function(){
         return this.getRequest[ws.getRequest.length-1];
     },
-    init: function(host = "ws://localhost:8000/polytopia"){
+    init: function(host = "ws://localhost:8000/polytopia", user= null){
         try{
             this.socket = new WebSocket(host);
             this.socket.onopen = onOpenHandler;
@@ -147,7 +147,7 @@ export const ws = {
         return this;
     },
     /**
-     * @param {ClientMessage} msg 
+     * @param {ClientMessage} msg
      */
     send: async function(msg){
         try{

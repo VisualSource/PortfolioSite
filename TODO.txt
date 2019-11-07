@@ -1,6 +1,0 @@
-TODO/CHANGES FILE
-
-AUTH:   
-   switch from basic auth to using a JWT (JsonWebToken) 
-      - fastify-jwt-authz
-      - fastify-jwt
