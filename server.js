@@ -26,8 +26,7 @@ fastify.ready(err => {
   if (err) throw err
   console.info("Websocket online")
   fastify.ws.on('connection',wsHandler)
-})
-//fastify.get("/polytopia", { websocket: true }, wsHandler);
+});
 
 // routes
 fastify.decorate('bearerAuth', async function (request, reply) {

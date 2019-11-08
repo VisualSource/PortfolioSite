@@ -30,6 +30,7 @@
     "fastify-static": "^2.5.0",
     "fastify-ws": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^1.6.0",
     "knex": "^0.20.1",
     "pg": "7.12.1",
     "uuid": "^3.3.3"

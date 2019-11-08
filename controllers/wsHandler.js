@@ -1,63 +1,51 @@
 const knex = require("./db");
 const {http, websocket} = require("./codes");
-/** @type {object} */
+const jwt = require('jsonwebtoken');
+const jwksClient = require('jwks-rsa');
+const client = jwksClient({
+  jwksUri: 'https://visualsource.auth0.com/.well-known/jwks.json'
+});
+function getKey(header, callback){
+  client.getSigningKey(header.kid, function(err, key) {
+    let signingKey = key.publicKey || key.rsaPublicKey;
+    callback(null, signingKey);
+  });
+}
 let userArray = {};
-/**
- * @typedef ClientMessage
- * @type {object}
- * @property {string} type - The type of message being sent.
- * @property {object=} payload - Holdes all params that are being sent
- * @property {string} id - Id of the client
- * @property {Date} date - day and time message was sent
- */
-/**
-  * @typedef ServerMessage
-  * @type {object}
-  * @property {string} type - type of message
-  * @property {number} statusCode - status of request
-  * @property {object=} data - returning data
-  * @property {Date} date - day and time sending message
-  */
-/**
- * @typedef ServerSocket
- * @type {object}
- * @property {number} readState
- * @property {number} bytesReceived
- * @property {object} extensions
- * @property {(string|string[])} protocol
- * @property {function} onerror
- * @property {functon} onopen
- * @property {function} onmessage
- * @property {function} on
- *
- */
-/**
- * @typedef Connection
- * @type {object}
- * @property {ServerSocket} socket
- */
-/**
- * main Websocket handler for polytopia multiplayer game
- * @param {Connection} socket
-*/
+
 function wsHandler(socket){
     /** @param {string} msg */
     const send = msg =>{
         socket.send(JSON.stringify(Object.assign({},msg, {date: Date.now()})))
     }
-    /** @param {ClientMessage} msg*/
     const messageHandler = msg =>{
         try{
-            /** @type {ClientMessage}*/
+            /** @type {import("../diff/index").ClientMessage}*/
             const data = JSON.parse(msg);
-
             switch (data.type) {
                 case "LOGIN":{
-                    knex.select('id').from("user").where("id","=", data.id).catch(()=>{
-                        send({type:"ERROR", statusCode: http.client_error.bad_request});
-                        socket.close(websocket.invaild_frame_playload,"Invalid User");
-                    });
-                  break;
+                    // verify token from auth0
+                  jwt.verify(data.payload.token, getKey,  { algorithms: ['RS256'] }, function(err, decoded) {
+                  if(err){
+                      //if error return 403 then close socket
+                      send({type:"ERROR", statusCode: http.client_error.unauthorized});
+                      socket.close(websocket.invaild_frame_playload,"Invaild User");
+                  }else{
+                      //else create new token and return token and user data field not worlds or current games
+                      const token = jwt.sign({ user: data.id, app: "Polytopia"}, 'GENUUID', { expiresIn: '5h' });
+                      knex("users").select("data").where("id","=".data.id).then(res=>{
+                        send({
+                            type:"LOGIN",
+                            statusCode: http.succes.accepted,
+                            data: {
+                                token,
+                                user: res
+                            }
+                        })
+                      });
+                  }
+                });
+                break;
                 }
                 default:
                     send({type:"ERROR", statusCode: http.client_error.not_acceptable});
@@ -69,9 +57,6 @@ function wsHandler(socket){
             socket.close(websocket.invaild_frame_playload,"Invalid frame payload data");
         }
     }
-
-
-
 
 socket.on('message', messageHandler);
 // Need to have error chacher else app crash
