@@ -65,9 +65,7 @@ export const ws = {
         }
         return this;
     },
-    /**
-     * @param {import("../diff/index").ClientMessage} msg
-     */
+    /** @param {import("../diff/index").ClientMessage} msg*/
     send: async function(msg){
         try{
             this.socket.send(JSON.stringify(Object.assign({},msg,{id: this.userToken, date: Date.now()})));
