@@ -11,12 +11,12 @@ function getKey(header, callback){
     callback(null, signingKey);
   });
 }
-let userArray = {};
 
-function wsHandler(socket){
-    /** @param {string} msg */
+
+function wsHandler(socket, server){
+    /** @param {string|object} msg */
     const send = msg =>{
-        socket.send(JSON.stringify(Object.assign({},msg, {date: Date.now()})))
+        socket.send(JSON.stringify(Object.assign(msg, {date: Date.now()})))
     }
     const messageHandler = msg =>{
         try{
@@ -47,6 +47,10 @@ function wsHandler(socket){
                 });
                 break;
                 }
+                case "REQUEST":{
+                    send({client: server.clients})
+                    break;
+                }
                 default:
                     send({type:"ERROR", statusCode: http.client_error.not_acceptable});
                     break;
@@ -54,7 +58,6 @@ function wsHandler(socket){
 
         }catch(err){
             send({type:"ERROR", statusCode: http.client_error.bad_request});
-            socket.close(websocket.invaild_frame_playload,"Invalid frame payload data");
         }
     }
 

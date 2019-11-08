@@ -25,7 +25,8 @@ fastify.register(require("fastify-static"), {root: path.join(__dirname, "public"
 fastify.ready(err => {
   if (err) throw err
   console.info("Websocket online")
-  fastify.ws.on('connection',wsHandler)
+  fastify.ws.on('connection',socket=>(wsHandler(socket,fastify.ws)));
+
 });
 
 // routes
