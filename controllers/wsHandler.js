@@ -1,4 +1,4 @@
-//const knex = require("./db");
+const knex = require("./db");
 //const ids = require("./constents");
 /** @type {object} */
 let userArray = {};
@@ -47,7 +47,7 @@ function wsHandler(con,req){
      * @param {string} msg 
      */
     const send = (msg)=>{
-        con.socket.send(JSON.stringify(msg))
+        con.socket.send(JSON.stringify(Object.assign(msg, {date: Date.now()})))
     }
 /**
  * 2xx Succes
@@ -94,46 +94,20 @@ function wsHandler(con,req){
             /** @type {ClientMessage}*/
             const data = JSON.parse(msg);
             switch (data.type) {
-                // SYSTEM RESPONSE
-                case "LOGIN": { 
-                    break;
+                case "LOGIN":{
+                    knex.select('id').from("user").where("id","=", data.id).catch(()=>{
+                        send({type:"ERROR", statusCode: 400});
+                        con.socket.close(1007,"Invalid User");
+                    });
+                  break;
                 }
-                case "EXIT":
-                    send({type:"EXIT", statusCode: 499, date: Date.now()});
-                    con.socket.close(1000,"Normal Closure");
-                    break;
-                 // REQUEST RESPONSE
-                case "REQUEST":
-                    try{
-                        switch (data.payload.request) {
-                            case "ALL":
-                                    console.log(userArray)
-                                send({type:"REQUEST", statusCode: 204, date: Date.now()});
-                                break;
-                            default:
-                                send({type:"ERROR", statusCode: 406, date: Date.now()});
-                                break;
-                        }
-                    }catch(err){
-                        send({type:"ERROR", statusCode: 404, date: Date.now()});
-                    }
-                    break;
-                // GAME RESPONSE
-                case "JOIN":
-                    send({type:"SYSTEM", statusCode: 204, date: Date.now()});
-                    break;
-                case "CREATE":
-                    send({type:"SYSTEM", statusCode: 204, date: Date.now()});
-                    break;
-                case "LEAVE":
-                    send({type:"SYSTEM", statusCode: 204, date: Date.now()});
-                    break;
                 default:
-                    send({type:"ERROR", statusCode: 400, date: Date.now()})
+                    send({type:"ERROR", statusCode: 406});
                     break;
             }
+           
         }catch(err){
-            send({type:"ERROR", statusCode: 400, date: Date.now()});
+            send({type:"ERROR", statusCode: 400});
             con.socket.close(1007,"Invalid frame payload data");
         }
     }
@@ -148,3 +122,44 @@ con.socket.onerror = (err)=>{
 con.socket.on('message', messageHandler);
 }
 module.exports = wsHandler;
+
+switch (data.type) {
+    // SYSTEM RESPONSE
+    case "LOGIN": { 
+        
+        break;
+    }
+    case "EXIT":
+        send({type:"EXIT", statusCode: 499});
+        con.socket.close(1000,"Normal Closure");
+        break;
+     // REQUEST RESPONSE
+    case "REQUEST":
+        try{
+            switch (data.payload.request) {
+                case "ALL":
+                        console.log(userArray)
+                    send({type:"REQUEST", statusCode: 204});
+                    break;
+                default:
+                    send({type:"ERROR", statusCode: 406});
+                    break;
+            }
+        }catch(err){
+            send({type:"ERROR", statusCode: 404});
+        }
+        break;
+    // GAME RESPONSE
+    case "JOIN":
+        send({type:"SYSTEM", statusCode: 204});
+        break;
+    case "CREATE":
+        send({type:"SYSTEM", statusCode: 204});
+        break;
+    case "LEAVE":
+        send({type:"SYSTEM", statusCode: 204});
+        break;
+    default:
+        send({type:"ERROR", statusCode: 400})
+        break;
+}
