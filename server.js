@@ -11,7 +11,6 @@ const fastify = require("fastify")({ http2: false, logger: false}); // https: { 
 // custom files
 const controllers = require('./controllers/controllers');
 const wsHandler = require("./controllers/wsHandler");
-const constants = require("./controllers/constents");
 
 ;
 fastify.register(require("fastify-websocket"),{options:{clientTracking: true }});
@@ -28,25 +27,22 @@ fastify.get("/polytopia", { websocket: true }, wsHandler);
 // routes
 fastify.decorate('bearerAuth', async function (request, reply) {
     const requestKey = await request.headers.authorization.replace("Bearer ","");
-    const cert = await fs.readFile('./https/csr.pem');  // get public key
-   jwt.verify(requestKey, cert, function(err, decoded) {
-
-   console.log(decoded) // bar
-        return true
+    jwt.verify(requestKey, '48133e08666f4a2a9ecdd1692f429fe3', function(err, decoded) {
+      if(err) return new Error(err.name);
+      if(decoded.host !== "auth0") return new Error("Invaild Host");
+      return "OK";
     });
-
   }).
-register(require('fastify-auth'))
-.after(() => {
+register(require('fastify-auth')).after(() => {
     fastify.route({
       method: 'POST',
       url: '/adduser/:id',
       preHandler: fastify.auth([fastify.bearerAuth]),
       handler: controllers.routeAddUser
-    })});
-//fastify.route(controllers.routeLogin);
+    })
+  });
+
 fastify.route(controllers.routeThrownRoom);
-//fastify.route(controllers.routeRegister);
 fastify.route(controllers.routeCreate);
 fastify.get("/", async (request, reply) => { reply.sendFile("index.html"); });
 
