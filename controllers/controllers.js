@@ -1,5 +1,6 @@
 const uuidv5 = require('uuid/v5');
 const knex = require('./db');
+const {http, websocket} = require('./codes')
 
 const APP_NAMESPACE_ID = "c42d2542-c807-4eff-86fe-4474666c8078";
 const APP_NAMESPACE_NAME = "POLYTOPIAGAMEUUID";
@@ -24,7 +25,7 @@ const routeThrownRoom = {
     url: "/throneroom/:faction",
     preHandler: [makeBodyJson],
     handler: async(req,rep)=>{
-         let data = await knex.column(req.params.faction).select().from('score').then(res=>res).catch(err=>{rep.code(404).send({error:"Could not find resource."})});
+         let data = await knex.column(req.params.faction).select().from('score').then(res=>res).catch(err=>{rep.code(http.client_error.not_found).send({error:"Could not find resource."})});
          return {payload: data};
     }
 }
@@ -43,13 +44,13 @@ const routeCreate = {
             }
             switch (req.body.request) {
                 case "uuid":
-                    reply.code(200).send({ uuid: uuidv5(APP_NAMESPACE_NAME,APP_NAMESPACE_ID)});
+                    reply.code(http.succes.ok).send({ uuid: uuidv5(APP_NAMESPACE_NAME,APP_NAMESPACE_ID)});
                 default:
-                    reply.code(400).send({error:"Invalid"});
+                    reply.code(http.client_error.bad_request).send({error:"Invalid"});
                     break;
             }
         }catch(err){
-            reply.code(400).send({error:"Invalid request"});
+            reply.code(http.client_error.bad_request).send({error:"Invalid request"});
         }
     }
 }
@@ -66,7 +67,7 @@ const routeCreate = {
                      }
                  }).into('user').then(trx.commit).catch(trx.rollback)
              })
-             .catch(err=>{reply.code(400).send({error:"Invalid"})})
+             .catch(err=>{reply.code(http.client_error.bad_request).send({error:"Invalid"})})
     }
 
 /**

@@ -12,8 +12,8 @@ const fastify = require("fastify")({ http2: false, logger: false}); // https: { 
 const controllers = require('./controllers/controllers');
 const wsHandler = require("./controllers/wsHandler");
 
-;
-fastify.register(require("fastify-websocket"),{options:{clientTracking: true }});
+
+fastify.register(require('fastify-ws'));
 fastify.register(require('fastify-cookie'));
 fastify.register(helment,{dnsPrefetchControl: false,});
 fastify.register(require('fastify-cors'), {
@@ -22,7 +22,12 @@ fastify.register(require('fastify-cors'), {
 fastify.register(require("fastify-static"), {root: path.join(__dirname, "public")});
 
 //websocket
-fastify.get("/polytopia", { websocket: true }, wsHandler);
+fastify.ready(err => {
+  if (err) throw err
+  console.info("Websocket online")
+  fastify.ws.on('connection',wsHandler)
+})
+//fastify.get("/polytopia", { websocket: true }, wsHandler);
 
 // routes
 fastify.decorate('bearerAuth', async function (request, reply) {
