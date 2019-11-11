@@ -63,7 +63,7 @@ function wsHandler(socket){
                         if(!err) {
                             clients[data.id] = socket;
                             // BUG Client token is NULL, Cant not be null
-                            const token = jwt.sign({ sub: data.id, issuer: "vs_ptm"}, 'bc96601b82a6480fb96d79e1cafc7341', { expiresIn: '5h' });
+                            const token = jwt.sign({ sub: data.id, iss: "vs_ptm", aud:"visual_multiplayer"}, 'bc96601b82a6480fb96d79e1cafc7341', { expiresIn: '5h' });
                                 knex("user").select("data").where("id","=",data.id).then(res=>{
                                     send({
                                         type:"LOGIN",
