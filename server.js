@@ -13,11 +13,11 @@ const controllers = require('./controllers/controllers');
 const wsHandler = require("./controllers/wsHandler");
 
 
-fastify.register(require('fastify-ws'));
+fastify.register(require('./plugins/ws'));
 fastify.register(require('fastify-cookie'));
 fastify.register(helment,{dnsPrefetchControl: false,});
 fastify.register(require('fastify-cors'), {
- origin: ["http://127.0.0.1:5500","https://127.0.0.1:8000","http://127.0.0.1:8000","https://visualsource.000webhostapp.com","https://visualsource.herokuapp.com/"]
+ origin: ["http://locahost:3000","http://127.0.0.1:5500","https://127.0.0.1:8000","http://127.0.0.1:8000","https://visualsource.000webhostapp.com","https://visualsource.herokuapp.com/"]
 });
 fastify.register(require("fastify-static"), {root: path.join(__dirname, "public")});
 
@@ -25,8 +25,7 @@ fastify.register(require("fastify-static"), {root: path.join(__dirname, "public"
 fastify.ready(err => {
   if (err) throw err
   console.info("Websocket online")
-  fastify.ws.on('connection',socket=>(wsHandler(socket,fastify.ws)));
-
+  fastify.ws.on('connection',socket=>{wsHandler(socket,fastify.ws)})
 });
 
 // routes
@@ -60,29 +59,18 @@ fastify.setNotFoundHandler({
   },
   (request, reply) => { reply.sendFile("404.html");}
 );
-/**
- * 2xx Succes
- *  200 Ok
- *  202 Accepted
- *  204 No Content
- * 4xx Client Errors
- *  400 Bad Request
- *  401 unauthorized
- *  403 Forbidden
- *  404 Not Found
- *  406 Not Acceptable
- *  409 Conflict
- */
+
 fastify.setErrorHandler( (err, req, reply) => {
-  if (err.statusCode === 401) { reply.code(401).send({ payload: 'unauthorized' }) }
-  reply.send({error: err.statusCode})
+  if (err.statusCode === 401) { reply.code(401).send({ payload: 'unauthorized' }) };
+  console.log(req)
+  console.error(err)
+  reply.send({error: err.statusCode, errorHandler: true})
 });
 
 // start
 const start = async () => {
   try {
     await fastify.listen(PORT);
-    fastify.log.info(`server listening on ${fastify.server.address().port}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
