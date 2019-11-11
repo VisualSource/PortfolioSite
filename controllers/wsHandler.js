@@ -1,8 +1,9 @@
 const knex = require("./db");
 const {http, websocket} = require("./codes");
 const jwt = require('jsonwebtoken');
-let request = require("request");
+const request = require("request");
 
+const TOKEN = 'bc96601b82a6480fb96d79e1cafc7341';
 async function verifyUser(token){
     jwt.verify(token,LOGIN_TOKEN_SECERIT, (err, decode)=>{
         if(!err && decode.issuer === "vs_ptm"){
@@ -17,7 +18,7 @@ function wsHandler(socket){
 
     /** @param {string} msg */
     const send = msg =>{
-        socket.send(JSON.stringify(Object.assign(msg, {date: Date.now()})))
+        socket.send(JSON.stringify(Object.assign({},msg, {date: Date.now()})))
     }
 
     
@@ -63,17 +64,21 @@ function wsHandler(socket){
                         if(!err) {
                             clients[data.id] = socket;
                             // BUG Client token is NULL, Cant not be null
-                            const token = jwt.sign({ sub: data.id, iss: "vs_ptm", aud:"visual_multiplayer"}, 'bc96601b82a6480fb96d79e1cafc7341', { expiresIn: '5h' });
                                 knex("user").select("data").where("id","=",data.id).then(res=>{
-                                    send({
-                                        type:"LOGIN",
-                                        statusCode: http.succes.accepted,
-                                        payload: {
-                                            token: token,
-                                            user: res[0]
-                                        }
-                                    })
-                                });
+                                    jwt.sign({ sub: data.id, iss: "vs_ptm", aud:"visual_multiplayer"}, TOKEN, (err,token)=>{
+                                        if(err) console.error(err);
+                                        const msg = {
+                                            type:"LOGIN",
+                                            statusCode: http.succes.accepted,
+                                            payload: {
+                                                token,
+                                                user: res[0],
+                                                
+                                            } 
+                                        };
+                                        send(msg);
+                                    });
+                                }).catch(err=>{console.error(err)})
                            
                         }else{
                             send({type:"ERROR", statusCode: http.client_error.unauthorized, payload:"Unauthorized"});
@@ -86,7 +91,7 @@ function wsHandler(socket){
                     verifyUser(data.id).then(()=>{requestMessageHandler(data.payload)}).catch(()=>{send({type:"ERROR", statusCode: http.client_error.unauthorized, payload:"Unauthorized"});})
                     break;
                 case "EXIT":
-                    jwt.verify(data.id, 'bc96601b82a6480fb96d79e1cafc7341', (err, decode)=>{
+                    jwt.verify(data.id, TOKEN, (err, decode)=>{
                         if(!err){
                             delete clients[decode.sub];
                             send({type:"EXIT", statusCode: http.client_error.client_closed_request, payload:"User Exited"});
