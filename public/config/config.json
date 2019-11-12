@@ -1,7 +1,11 @@
 {
-  "build": "2.0.0 (alpha)(Reworked-Version)",
+  "build": "3.0.0 (alpha)(Auth0 Build)",
   "settings": {
     "lang":"en",
-    "forceLogin":false
+    "forceLogin":true,
+    "production": false
+  },
+  "url":{
+    "online_games":"http://localhost:3000/user/"
   }
 }

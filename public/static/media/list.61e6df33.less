@@ -1,0 +1,14 @@
+@import './variables.less';
+@import './themes/@{so-theme}.less';
+
+@list-prefix: ~'@{so-prefix}-list';
+
+.@{list-prefix} {
+  display: block;
+
+  &-absolute-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
