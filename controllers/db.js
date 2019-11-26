@@ -2,10 +2,8 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const DEV = process.env.DEV;
 
 const conn = DEV ? {
-  host: DATABASE_URL,
-  user:"postgres",
-  password:"root",
-  database:"visualsource",
+  connectionString: DATABASE_URL,
+  ssl: true
 } : {
   host: "localhost",
   user:"postgres",
