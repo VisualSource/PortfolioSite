@@ -71,7 +71,7 @@ fastify.setErrorHandler( (err, req, reply) => {
 // start
 const start = async () => {
   try {
-    await fastify.listen(PORT);
+    await fastify.listen(PORT,"0.0.0.0");
     console.log(PORT)
   } catch (err) {
     fastify.log.error(err);
