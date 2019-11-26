@@ -17,7 +17,7 @@
       "quantity": 1
     }
   },
-  "name": "Visualsource ",
+  "name": "Visualsource",
   "scripts": {
   },
   "stack": "heroku-18"
