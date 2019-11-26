@@ -1,9 +1,10 @@
 //env vars
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8000
+const DEV = process.env.DEV || true;
 
 //node modules
 const path = require("path");
-const fs = require("fs");
+//const fs = require("fs");
 const helment = require('fastify-helmet');
 const jwt = require('jsonwebtoken');
 const fastify = require("fastify")({ http2: false, logger: false}); // https: { key: fs.readFileSync('https/key.pem'), cert: fs.readFileSync('https/server.crt') }
@@ -16,8 +17,9 @@ const wsHandler = require("./controllers/wsHandler");
 fastify.register(require('./plugins/ws'));
 fastify.register(require('fastify-cookie'));
 fastify.register(helment,{dnsPrefetchControl: false,});
+const origins = DEV ? ["http://locahost:3000","http://127.0.0.1:5500","https://127.0.0.1:8000","http://127.0.0.1:8000","https://visualsource.000webhostapp.com","https://visualsource.herokuapp.com/"] : ["https://visualsource.000webhostapp.com","https://visualsource.herokuapp.com/"];
 fastify.register(require('fastify-cors'), {
- origin: ["http://locahost:3000","http://127.0.0.1:5500","https://127.0.0.1:8000","http://127.0.0.1:8000","https://visualsource.000webhostapp.com","https://visualsource.herokuapp.com/"]
+ origin: origins
 });
 fastify.register(require("fastify-static"), {root: path.join(__dirname, "public")});
 
@@ -62,7 +64,6 @@ fastify.setNotFoundHandler({
 
 fastify.setErrorHandler( (err, req, reply) => {
   if (err.statusCode === 401) { reply.code(401).send({ payload: 'unauthorized' }) };
-  console.log(req)
   console.error(err)
   reply.send({error: err.statusCode, errorHandler: true})
 });
@@ -77,4 +78,4 @@ const start = async () => {
   }
 };
 start();
-module.exports = fastify;
+

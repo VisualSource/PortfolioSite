@@ -1,5 +1,5 @@
 export interface ClientMessage{
-    type: string;
+    type: "LOGIN"| "REQUEST" | "EXIT";
     payload?:{
         request?: "JOIN" | "CREATE" | "UPDATE_WORLD" | "LEAVE_GAME" | "FINISH_GAME" | "END_TURN"
     }
