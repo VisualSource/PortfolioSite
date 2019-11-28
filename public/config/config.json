@@ -1,11 +1,1 @@
-{
-  "build": "3.0.0 (alpha)(Auth0 Build)",
-  "settings": {
-    "lang":"en",
-    "forceLogin":true,
-    "production": false
-  },
-  "url":{
-    "online_games":"http://localhost:3000/user/"
-  }
-}
+{"build":"3.6.0 (Auth0)(Alpha)","settings":{"lang":"en","forceLogin":false,"production":true},"dev_url":"http://localhost:3000","production_url":"https://visualsource.herokuapp.com"}
