@@ -25,8 +25,17 @@ const routeThrownRoom = {
     url: "/throneroom/:faction",
     preHandler: [makeBodyJson],
     handler: async(req,rep)=>{
-         let data = await knex.column(req.params.faction).select().from('score').then(res=>res).catch(err=>{rep.code(http.client_error.not_found).send({error:"Could not find resource",statusCode: http.client_error.not_found})});
-         return {payload: data};
+        const data = await knex("score").column(req.params.faction).select("id").then( async(res)=>{
+           let factionData = [];
+           for(let user in res){
+            const userdata = await knex('user').select('username').where("id","=",res[user].id).then(name=>{
+                return Object.assign({}, { score: res[user][req.params.faction] }, name[0])  
+             }); 
+             factionData.push(userdata);
+           }
+           return factionData;
+         });
+         return data;
     }
 }
 /**

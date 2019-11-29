@@ -5,7 +5,7 @@ const conn = DEV ? {
   connectionString: DATABASE_URL,
   ssl: true
 } : {
-  host: "localhost",
+  host: "127.0.0.1",
   user:"postgres",
   password:"root",
   database:"visualsource",
@@ -13,7 +13,13 @@ const conn = DEV ? {
 };
 const knex = require('knex')({
     client:"pg",
-    connection: conn,
+    connection: {
+      host: "127.0.0.1",
+      user:"postgres",
+      password:"root",
+      database:"visualsource",
+      port: "5433"
+    },
     debug: false,
     asyncStackTraces: false
   });
