@@ -12,7 +12,7 @@ const fastify = require("fastify")({ http2: false, logger: false}); // https: { 
 // custom files
 const controllers = require('./controllers/controllers');
 const wsHandler = require("./controllers/wsHandler");
-
+const ggWss = require('../ghost/src/server/index')
 
 fastify.register(require('./plugins/ws'));
 fastify.register(require('fastify-cookie'));
@@ -27,7 +27,8 @@ fastify.register(require("fastify-static"), {root: path.join(__dirname, "public"
 fastify.ready(err => {
   if (err) throw err
   console.info("Websocket online")
-  fastify.ws.on('connection',socket=>{wsHandler(socket,fastify.ws)})
+  //fastify.ws.on('connection',socket=>{wsHandler(socket,fastify.ws)});
+  ggWss(fastify.ws);
 });
 
 // routes
