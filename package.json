@@ -1,12 +1,13 @@
 {
   "name": "vs_webserver",
-  "version": "2.17.0",
+  "version": "3.0.0",
   "description": "visualsource web server",
-  "main": "server.js",
+  "main": "./dist/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server",
-    "gitpod": "npm install -g wscat "
+    "dev": "nodemon -x ts-node --files ./src/server.ts",
+    "test": "jest",
+    "build": "tsc --sourceMap -p ./",
+    "start": "node ./dist/server.js"
   },
   "nodemonConfig": {
     "ignore": [
@@ -18,7 +19,7 @@
     }
   },
   "engines": {
-    "node":"10.16.3",
+    "node": "10.16.3",
     "npm": "6.9.0"
   },
   "keywords": [],
@@ -44,6 +45,12 @@
     "ws": "^7.2.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.1"
+    "@types/jest": "^24.9.0",
+    "@types/node": "^13.1.8",
+    "jest": "^24.9.0",
+    "nodemon": "^2.0.1",
+    "ts-jest": "^24.3.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
   }
 }
