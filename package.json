@@ -30,7 +30,7 @@
     "url": "https://github.com/BoomIsHere/VisualSourceWebsite"
   },
   "dependencies": {
-    "fastify": "^2.10.0",
+    "fastify": "^2.11.0",
     "fastify-auth": "0.7.2",
     "fastify-cookie": "^3.5.0",
     "fastify-cors": "^3.0.0",
