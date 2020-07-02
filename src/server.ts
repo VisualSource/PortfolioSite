@@ -6,7 +6,9 @@ import * as staticFiles from 'fastify-static';
 import * as jwks from 'jwks-rsa';
 import {Server, IncomingMessage, ServerResponse} from 'http';
 import {join} from 'path';
+import {readFile} from 'fs';
 import KevinHandler from './handlers/kevinOnline';
+import {server_error_code, client_error_code} from './config';
 
 declare module "fastify"{
     export interface FastifyInstance<
@@ -56,12 +58,30 @@ server.route({
     }
 });
 
+server.route({
+    method: "GET",
+    url:"/Kevin/:data",
+    handler: (request, reply)=>{
+        if(request.params.data === "db") reply.sendFile("db_kevin.json",`${__dirname}/json/`);
+        readFile(`${__dirname}/json/db_kevin.json`,{encoding:"utf-8"},(err, data)=>{
+            if(err) reply.code(server_error_code.unknown_error).send(new Error("Failed to get data"));
+            try {
+                const raw = JSON.parse(data);
+                const key = Object.keys(raw).find(data=>data === request.params.data);
+                if(key === undefined) throw new Error("Object does not exsit");
+                reply.send(raw[key]);
+            } catch (error) {
+                reply.code(client_error_code.bad_request).send(error);
+            }
+        });
+    }
+});
+
 
 const start = async()=>{
     try{
         await server.listen(Number(PORT), '0.0.0.0');
         console.log("Server at", PORT);
-        
     }catch(err){
         console.error(err);
         server.log.error(err);
@@ -72,5 +92,6 @@ const start = async()=>{
 server.setNotFoundHandler((request,reply)=>{
     reply.sendFile("404.html")
 });
+
 
 start();
