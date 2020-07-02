@@ -32,7 +32,7 @@ const jwtCheck = jwt({
   algorithms: ['RS256']
 });
 const PORT = process.env.PORT || 8000;
-const server: fastify.FastifyInstance<Server, IncomingMessage,ServerResponse> = fastify();
+const server: fastify.FastifyInstance<Server, IncomingMessage,ServerResponse> = fastify({ logger: process.env.production === "true" ? false : true});
 server.register(helment,{dnsPrefetchControl: false});
 server.register(cors,{
     credentials: true,
