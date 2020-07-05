@@ -18,6 +18,21 @@ declare module "fastify"{
   >{}
 }
 
+function restDB(request,reply: fastify.FastifyReply<ServerResponse>){
+    if(request.params.data === "db") reply.sendFile(reply.context.config.file,`${__dirname}/json/`);
+    readFile(`${__dirname}/json/${reply.context.config.file}`,{encoding:"utf-8"},(err, data)=>{
+        if(err) reply.code(server_error_code.unknown_error).send(new Error("Failed to get data"));
+        try {
+            const raw = JSON.parse(data);
+            const key = Object.keys(raw).find(data=>data === request.params.data);
+            if(key === undefined) throw new Error("Object does not exsit");
+            reply.send(raw[key]);
+        } catch (error) {
+            reply.code(client_error_code.bad_request).send(error);
+        }
+    });
+}
+
 const orgins = process.env.production === "true" ? [ "https://visualsource.000webhostapp.com","https://visualsource.herokuapp.com"] : ["http://localhost:3000","http://localhost:5500","http://127.0.0.1:5500",];
 
 const jwtCheck = jwt({
@@ -54,29 +69,17 @@ server.route({
     method: "GET",
     url: "/",
     handler: async(request,reply)=>{
-        reply.sendFile("404.html");
+        reply.sendFile("index.html");
     }
 });
+
 
 server.route({
     method: "GET",
     url:"/Kevin/:data",
-    handler: (request, reply)=>{
-        if(request.params.data === "db") reply.sendFile("db_kevin.json",`${__dirname}/json/`);
-        readFile(`${__dirname}/json/db_kevin.json`,{encoding:"utf-8"},(err, data)=>{
-            if(err) reply.code(server_error_code.unknown_error).send(new Error("Failed to get data"));
-            try {
-                const raw = JSON.parse(data);
-                const key = Object.keys(raw).find(data=>data === request.params.data);
-                if(key === undefined) throw new Error("Object does not exsit");
-                reply.send(raw[key]);
-            } catch (error) {
-                reply.code(client_error_code.bad_request).send(error);
-            }
-        });
-    }
+    config: { file: "db_kevin.json" },
+    handler: restDB
 });
-
 
 const start = async()=>{
     try{

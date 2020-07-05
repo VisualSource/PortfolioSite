@@ -7,7 +7,8 @@
     "dev": "nodemon -x ts-node --files ./src/server.ts",
     "test": "jest",
     "build": "tsc --sourceMap -p ./",
-    "start": "node ./dist/server.js"
+    "start": "node ./dist/server.js",
+    "internet":"./test/ngrok http 8000"
   },
   "nodemonConfig": {
     "ignore": [
