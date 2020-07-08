@@ -39,7 +39,7 @@
     "fastify-cors": "^3.0.3",
     "fastify-helmet": "^3.0.2",
     "fastify-plugin": "^1.6.1",
-    "fastify-static": "^2.7.0",
+    "fastify-static": "^3.1.0",
     "jwks-rsa": "^1.8.1",
     "knex": "^0.21.1",
     "pg": "8.2.1",
