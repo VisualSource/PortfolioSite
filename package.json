@@ -46,7 +46,7 @@
     "random-js": "^2.1.0",
     "simplex-noise": "^2.4.0",
     "socket.io": "^2.3.0",
-    "three": "^0.115.0",
+    "three": "^0.119.0",
     "uuid": "^8.1.0"
   },
   "devDependencies": {
