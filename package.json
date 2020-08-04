@@ -38,7 +38,7 @@
     "fastify-cookie": "^3.6.1",
     "fastify-cors": "^3.0.3",
     "fastify-helmet": "^3.0.2",
-    "fastify-plugin": "^1.6.1",
+    "fastify-plugin": "^2.1.0",
     "fastify-static": "^2.7.0",
     "jwks-rsa": "^1.8.1",
     "knex": "^0.21.1",
