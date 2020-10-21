@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "express-jwt": "^6.0.0",
-    "fastify": "^2.15.1",
+    "fastify": "^3.7.0",
     "fastify-auth": "1.0.1",
     "fastify-cookie": "^4.0.2",
     "fastify-cors": "^3.0.3",
