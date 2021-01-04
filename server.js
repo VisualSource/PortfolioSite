@@ -13,7 +13,7 @@ app.use(cors({
 app.use(express.json());
 
 app.get('/', function (req, res) {
-    mcpeping("135.148.9.125", 19132,(err,data)=>{
+    mcpeping("35.209.27.81", 19132,(err,data)=>{
       if (err) {
         res.status(200).json({type:"error",  data:err});
      } else {
