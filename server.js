@@ -9,9 +9,7 @@ const express = require('express');
 const cors = require('cors')
 const app = express();
 
-app.use(cors({
-    origin: ["http://localhost:8000","https://visualsource.000webhostapp.com/"],
-}));
+app.use(cors());
 app.use(express.json());
 
 app.get("/favicon.ico",(req,res)=>{
