@@ -3,44 +3,42 @@ const PORT = process.env.PORT || 8000
 const DEV = process.env.DEV || true;
 
 const path = require("path");
+const https = require("http");
+const fs = require("fs");
 
-const mcpeping = require('mcpe-ping');
 const express = require('express');
 const cors = require('cors')
 const app = express();
+const server = https.createServer({},app);
+
+const { Server } = require("socket.io");
+
+const io = new Server(server);
+
+io.on('connection', (socket) => {
+    socket.on('chat message', msg => {
+      io.emit('chat message', msg);
+    });
+});
 
 app.use(cors());
 app.use(express.json());
 
-app.get("/favicon.ico",(req,res)=>{
-    res.sendFile(path.join(__dirname,"favicon.ico"));
+app.get("/socket.io/socket.io.js",(req,res)=>{
+    res.sendFile(path.join(__dirname,"node_modules/socket.io/client-dist/socket.io.min.js"));
 });
-app.get("/.well-known/acme-challenge/oAw_3Sz9Otg8Esqw1-EB7FK1HHm4eLLUnsw53aag7Ik",(req,res)=>{
-    res.sendFile(path.join(__dirname,"vaild.txt"));
+app.get("/favicon.ico",(req,res)=>{
+    res.sendFile(path.join(__dirname,"public","favicon.ico"));
+});
+app.get("/.well-known/acme-challenge/EA0YdZf2zqaLafGJJQIsqMlc51yhMf70nTxf8Icj3nE",(req,res)=>{
+    res.sendFile(path.join(__dirname,"public","vaild.txt"));
+});
+app.get("/socket-test",(req,res)=>{
+    res.sendFile(path.join(__dirname,"public","socket_test.html"));
 });
 
 app.get('/', function (req, res) {
-    mcpeping("35.209.27.81", 19132,(err,data)=>{
-      if (err) {
-        res.status(200).json({type:"error",  data:err});
-     } else {
-         res.status(200).json( {
-             type:"info", 
-             code: 200,
-             data: {
-                 players: [],
-                 max_players: data.maxPlayers,
-                 current_players: data.currentPlayers
-             }, 
-             msg:"returning data"
-         });
-     }
-    },3000,false);
+    res.sendFile(path.join(__dirname,"public","index.html"));
 });
 
- 
-app.listen(PORT,"0.0.0.0");
-
-
-
-//35.209.27.81
+server.listen(PORT,"0.0.0.0");
