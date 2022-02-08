@@ -1,0 +1,22 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "password",
+    "database": "postgres",
+    "dialect": "postgres",
+    "use_env_variable": "DATABASE_URL"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "username": "root",
+    "password": null,
+    "database": "postgres",
+    "dialect": "postgres"
+  }
+}
