@@ -9,7 +9,7 @@ const { apiLimiter } = require("../../middleware/rate_limiter");
 const { mcResourceSchema, mcEditSchema } = require("../../schemas");
 
 const { mcs_resources, Sequelize } = require("../../models");
-const { readJson, apiResponse, validate } = require("../../shared/utils");
+const { readJson, apiResponse, validate, vaildCount } = require("../../shared/utils");
 
 const minecraft = express.Router();
 const db = path.join(__dirname,"../../private/minecraft.json");
@@ -192,6 +192,8 @@ minecraft.post("/resource", apiLimiter, mcResourceSchema, checkJwt, async (req,r
     try {
         const error = validate(req);
         if(error !== null) return next(error);
+
+        if(!vaildCount()) return next(createHttpError.InsufficientStorage());
 
         const items = await mcs_resources.count();
 

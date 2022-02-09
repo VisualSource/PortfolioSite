@@ -1,6 +1,22 @@
 const fs = require("fs");
 const { validationResult } = require("express-validator");
 const createHttpError = require("http-errors");
+const { QueryTypes } = require('sequelize');
+
+const { sequelize } = require("../models");
+
+
+async function vaildCount(){
+    const query = "SELECT count_rows(table_schema,table_name) from information_schema.tables where table_schema not in ('pg_catalog', 'information_schema') and table_type='BASE TABLE'";
+    const count = await sequelize.query(query,{ type: QueryTypes.SELECT });
+
+    let overall = 0;
+    for(const a of count){
+        overall += a.count_rows;
+    }
+
+    return overall < 9998;
+}
 
 /**
  * @param {string} file
@@ -42,5 +58,6 @@ function apiResponse(res,message, status = 200) {
 module.exports = {
     readJson,
     apiResponse,
-    validate
+    validate,
+    vaildCount
 };
