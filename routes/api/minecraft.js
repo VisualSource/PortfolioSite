@@ -194,6 +194,7 @@ minecraft.post("/resource", apiLimiter, mcResourceSchema, checkJwt, async (req,r
         if(error !== null) return next(error);
 
         const items = await mcs_resources.count();
+
         const {name,description,type,state,required,images,links,icon} = req.body;
         await mcs_resources.create({
             name,
