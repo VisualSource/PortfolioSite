@@ -6,14 +6,15 @@ module.exports = {
     dialect: "postgres",
     use_env_variable: "DATABASE_URL",
   },
+  /**
+   * @type {import("sequelize").Config}
+   */
   production: {
+    logging: false,
     use_env_variable: "DATABASE_URL",
     dialect: "postgres",
     dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
+      ssl: true
     }
   }
 }

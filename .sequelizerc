@@ -1,11 +1,5 @@
 const path = require('path');
-  /**
- * @type {import("sequelize").Config}
- */
+
 module.exports = {
-  'config': path.resolve('config','config.js'),
-  'models-path': path.resolve('models'),
-  'seeders-path': path.resolve('seeders'),
-  'migrations-path': path.resolve('migrations'),
-  url: process.env.DATABASE_URL
-};
+  'config': path.resolve('config', 'config.js')
+}

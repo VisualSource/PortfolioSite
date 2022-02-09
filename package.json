@@ -14,11 +14,12 @@
   "readme": "README.md",
   "scripts": {
     "start": "node ./bin/www",
-    "heroku-postbuild": "sequelize db:migrate --env production && sequelize sequelize db:seed:all --env production",
+    "heroku-postbuild": "",
     "dev": "set NODE_ENV=development&& nodemon ./bin/www"
   },
   "engines": {
-    "node": "16.13.2"
+    "node": "16.13.2",
+    "npm": "8.1.2"
   },
   "dependencies": {
     "axios": "^0.25.0",
