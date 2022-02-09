@@ -14,7 +14,7 @@
   "readme": "README.md",
   "scripts": {
     "start": "node ./bin/www",
-    "heroku-postbuild": "npx sequelize db:migrate --env production && npx sequelize sequelize db:seed:all --env production",
+    "heroku-postbuild": "sequelize db:migrate --env production && sequelize sequelize db:seed:all --env production",
     "dev": "set NODE_ENV=development&& nodemon ./bin/www"
   },
   "engines": {
