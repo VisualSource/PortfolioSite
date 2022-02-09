@@ -1,0 +1,30 @@
+{
+  "short_name": "VisualSource",
+  "name": "VisualSource",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "images/logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "images/logo480.png",
+      "type": "image/png",
+      "sizes": "480x480"
+    },
+    {
+      "src": "images/logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ff3e00",
+  "background_color": "#2f2f2f"
+}

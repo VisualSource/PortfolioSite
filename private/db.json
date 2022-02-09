@@ -1,0 +1,80 @@
+{
+    "version": "3.0.0",
+    "games": [
+            {
+                "title": "Polytopia Legacy Demo",
+                "description": "A web based version of the game polytopia.",
+                "route":"https://visualsource.us/games/pt_legacy",
+                "image":"/images/polytopia/polytopia_legacy.webp"
+            },
+            {
+                "title": "Polytopia Demo 8",
+                "description": "A web based version of the game polytopia.",
+                "route":"https://visualsource.us/games/demo8",
+                "image":"/images/polytopia/polytopia_demo.webp"
+            },
+            {
+                "title": "2048",
+                "description": "A sliding tile puzzle",
+                "route":"https://visualsource.us/games/2048",
+                "image": "/images/2048.webp"
+            },
+            {
+                "title": "Panio Tiles",
+                "description": "A simple game where you hit tile to music",
+                "route": "https://visualsource.us/games/paniotiles",
+                "image": "/images/2048.webp"
+            }
+    ],
+    "projects": [
+        {
+            "images":["/images/polytopia/polytopia_demo.webp","/images/polytopia/polytopia.webp"],
+            "title": "PolytopiaJS",
+            "branch": "master",
+            "repo":"polytopia",
+            "desc": "A remake of the game Polytopua in Javascript"
+        },
+        {
+            "images": ["/images/mc_installer.webp"],
+            "title": "Rusty Minecraft Launcher",
+            "branch": "master",
+            "repo": "mc-installer-v2",
+            "desc": "A minecraft launcher with mod support"
+        },
+        {
+            "images": [],
+            "title": "Bedrock Control Panel",
+            "branch": "main",
+            "repo": "control-panel",
+            "desc": "A minecraft bedrock Ubuntu sever control panel"
+        },
+        {
+            "images": [],
+            "title": "Minecraft Server watcher",
+            "branch": "master",
+            "repo": "task_watcher",
+            "desc": "Windows tray icon server status watcher"
+        },
+        {
+            "images": [],
+            "title": "Kevin Card Game",
+            "branch": "master",
+            "repo": "KevinCardGame",
+            "desc": "A card game with lots of cats"
+        },
+        {
+            "images": [],
+            "title": "Google DNS Updaer",
+            "branch": "master",
+            "repo": "dns_updater",
+            "desc": "A simple Google DNS Updater"
+        },
+        {
+            "images": [],
+            "title": "Polyscript lang",
+            "branch": "master",
+            "repo": "Polyscript",
+            "desc": "A first attempt in writing a programing language"
+        }
+    ]
+}

@@ -4,15 +4,17 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('visualsource:server');
-var http = require('http');
+if (process.env.NODE_ENV === "development")  require("dotenv").config({ debug: true });
+
+const app = require('../app');
+const debug = require('debug')('visualsource:server');
+const http = require('http');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '8000');
 app.set('port', port);
 
 /**
