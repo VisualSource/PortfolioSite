@@ -118,7 +118,7 @@ minecraft.get("/datapacks/:sort", sortBy, async (req,res,next)=>{
 });
 
 minecraft.get("/all",async (req,res,next)=>{
-    await query(req,res,next,{},false);
+    await query(req,res,next);
 });
 
 minecraft.get("/all/:sort", sortBy, async (req,res,next)=>{

@@ -40,11 +40,6 @@ module.exports = {
         optional: { options: { nullable: false } },
         isString: true
     },
-    nickname: {
-        in: "body",
-        optional: { options: { nullable: false } },
-        isString: true
-    },
     metadata: {
         in: "body",
         optional: { options: { nullable: false } },
