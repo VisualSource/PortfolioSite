@@ -1,8 +1,5 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "password",
-    "database": "postgres",
     "dialect": "postgres",
     "use_env_variable": "DATABASE_URL"
   },
@@ -14,9 +11,6 @@
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
-    "username": "root",
-    "password": null,
-    "database": "postgres",
     "dialect": "postgres"
   }
 }

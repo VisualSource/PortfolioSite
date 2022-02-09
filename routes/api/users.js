@@ -1,11 +1,16 @@
 const express = require('express');
-const { checkJwt, claimCheck } = require("../../middleware/jwt_auth");
-const { apiLimiter } = require("../../middleware/rate_limiter");
-const { readJson, asApiError } = require("../../shared/utils");
+const { checkSchema } = require('express-validator');
 const axios = require('axios').default;
 const moment = require("moment");
 const fs = require("fs");
 const path = require("path");
+const createHttpError = require("http-errors");
+
+const { checkJwt } = require("../../middleware/jwt_auth");
+const { apiLimiter } = require("../../middleware/rate_limiter");
+const { auth0UserSchema } = require("../../schemas");
+
+const { readJson, apiResponse, validate } = require("../../shared/utils");
 
 const users = express.Router();
 
@@ -58,15 +63,16 @@ async function getManagmentToken(){
 
     let from = moment(lastFetched,"YYYY-MM-DD hh:mm:ss");
     
-    if(moment.duration(moment().diff(from)).get("seconds") < 36000) {
-        return cache["token"];
-    }
+    if(moment.duration(moment().diff(from)).get("seconds") < 36000) return cache["token"];
 
     return await fetchToken();
 }
 
-users.get("/get/:id", apiLimiter, async (req,res,next)=>{
+users.get("/get/:id", apiLimiter, checkSchema({ id: { in: "params", isString: true } }), async (req,res,next)=>{
     try {
+        const error = validate(req);
+        if(error !== null) return next(error);
+
         let token = await getManagmentToken();
 
         const response = await axios.get(`https://visualsource.auth0.com/api/v2/users/${req.params.id}?fields=name%2Cuser_id%2Cpicture%2Cuser_metadata&include_fies=true`,{
@@ -75,31 +81,24 @@ users.get("/get/:id", apiLimiter, async (req,res,next)=>{
             },
             responseType: 'json',
             transformResponse: [function (data) {
-            if(typeof data === "string") {
-                return JSON.parse(data);
-            }
+                if(typeof data === "string") return JSON.parse(data);
                 return data;
             }]
         });
 
-        if(response.status === 200) {
-            return res.json(response.data);
-        }
+        if(response.status === 200) return res.json(response.data);
 
-        res.sendStatus(response.status);
-    } catch (error) {
-        next(asApiError(error));
+        apiResponse(res,response.statusText,response.status);
+    } catch(error) {
+        next(createHttpError.InternalServerError(error));
     }
 });
 
-users.patch("/update/:id", apiLimiter, checkJwt, async( req, res, next )=>{
+users.patch("/update/:id", apiLimiter, checkJwt, auth0UserSchema, async( req, res, next )=>{
     try {
-        if( req.auth.payload.sub !== req.params.id) {
-                return res.status(401).json({
-                    status: 401,
-                    msg: "Unauthorized"
-                });
-        }
+        const error = validate(req);
+        if(error !== null) return next(error);
+
         let token = await getManagmentToken();
 
         let response = await axios.patch(`https://visualsource.auth0.com/api/v2/users/${req.auth.payload.sub}`,req.body,{
@@ -108,9 +107,10 @@ users.patch("/update/:id", apiLimiter, checkJwt, async( req, res, next )=>{
                     'authorization': `Bearer ${token}`
             }
         });
-        res.sendStatus(response.status);
+
+        apiResponse(res,response.statusText,response.status);
     } catch (error) {
-        next(asApiError(error));
+        next(createHttpError.InternalServerError(error));
     }
 });
 

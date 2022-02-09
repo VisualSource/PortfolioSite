@@ -1,39 +1,45 @@
 {
-    "version": "2.1.0",
+    "version": "3.0.0",
     "games": [
             {
                 "title": "Polytopia Legacy Demo",
                 "description": "A web based version of the game polytopia.",
-                "route":"https://visualsource.000webhostapp.com/games/pt_legacy/index.html",
-                "image":"/resources/polytopia.webp"
+                "route":"https://visualsource.us/games/pt_legacy",
+                "image":"/images/polytopia/polytopia_legacy.webp"
             },
             {
-                "title": "Polytopia Demo",
+                "title": "Polytopia Demo 8",
                 "description": "A web based version of the game polytopia.",
-                "route":"https://game.visualsource.us",
-                "image":"/resources/polytopia_demo.webp"
+                "route":"https://visualsource.us/games/demo8",
+                "image":"/images/polytopia/polytopia_demo.webp"
             },
             {
                 "title": "2048",
                 "description": "A sliding tile puzzle",
-                "route":"https://visualsource.000webhostapp.com/games/2048/index.html",
-                "image": "/resources/2048.webp"
+                "route":"https://visualsource.us/games/2048",
+                "image": "/images/2048.webp"
+            },
+            {
+                "title": "Panio Tiles",
+                "description": "A simple game where you hit tile to music",
+                "route": "https://visualsource.us/games/paniotiles",
+                "image": "/images/2048.webp"
             }
     ],
     "projects": [
         {
-            "images":["/resources/polytopia_demo.webp","/resources/polytopia.webp"],
-            "title": "PolytopiaJs",
+            "images":["/images/polytopia/polytopia_demo.webp","/images/polytopia/polytopia.webp"],
+            "title": "PolytopiaJS",
             "branch": "master",
             "repo":"polytopia",
             "desc": "A remake of the game Polytopua in Javascript"
         },
         {
-            "images": ["/resources/mc_installer.webp"],
-            "title": "MC Installer",
-            "branch": "main",
-            "repo": "mc-installer",
-            "desc": "A minecraft java mod installer"
+            "images": ["/images/mc_installer.webp"],
+            "title": "Rusty Minecraft Launcher",
+            "branch": "master",
+            "repo": "mc-installer-v2",
+            "desc": "A minecraft launcher with mod support"
         },
         {
             "images": [],

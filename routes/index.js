@@ -6,8 +6,8 @@ router.get('/', function(_req, res) {
   res.render('index');
 });
 
-router.get("/games/demo6",(req,res)=>{
-  res.render("/games/demo6/index");
+router.get("/games/pt_legacy",(req,res)=>{
+  res.render("/games/pt_legacy/index");
 });
 router.get("/games/demo8",(req,res)=>{
   res.render("/games/demo8/index");

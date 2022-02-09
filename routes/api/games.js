@@ -1,8 +1,14 @@
 const express = require('express');
-const { Game2048 } = require("../../models");
+const createHttpError = require("http-errors");
+const { checkSchema } = require("express-validator");
+
+const { game2048Schema } = require("../../schemas");
 const { checkJwt } = require("../../middleware/jwt_auth");
 const { apiLimiter } = require("../../middleware/rate_limiter");
-const { asApiError } = require("../../shared/utils");
+
+
+const { Game2048 } = require("../../models");
+const { apiResponse, validate } = require("../../shared/utils");
 
 const games = express.Router();
 
@@ -20,7 +26,7 @@ app_2048.get("/top3", async (req,res,next)=>{
         });
         res.json(data);
     } catch (error) {
-        next(asApiError(error));
+        next(createHttpError.InternalServerError(error));
     }
 });
 app_2048.get("/top10",async(req,res,next)=>{
@@ -33,50 +39,37 @@ app_2048.get("/top10",async(req,res,next)=>{
         });
         res.json(data);
     } catch (error) {
-        next(asApiError(error));
+        next(createHttpError.InternalServerError(error));
     }
 });
-app_2048.get("/user/:id",async(req,res,next)=>{
+app_2048.get("/user/:id",  checkSchema({ id: { in: "params", isString: true } }),  async(req,res,next)=>{
     try {
-        let data = await Game2048.findAll({  
-            where: {
-                user: req.params.id
-            }
-        });
+        let data = await Game2048.findByPk(req.params.id);
 
-        if (data.length > 0) {
-            res.json(data[0]);
-        }
+        if (data !== null) return res.json(data);
 
-        res.status(400).json({
-            status: 400,
-            msg: "Invaild user sub"
-        })
+       next(createHttpError.NotFound("Failed to find user"));
     } catch (error) {
-        next(asApiError(error));
+        next(createHttpError.InternalServerError(error));
     }
 });
-app_2048.post("/update",apiLimiter,checkJwt, async (req,res,next)=>{
+app_2048.post("/update", apiLimiter, checkJwt, game2048Schema, async (req,res,next)=>{
     try {
-        if(req.auth.payload.sub !== req.body.user) {
-            return res.status(401).json({
-                status: 401,
-                msg: "Unauthorized"
-            });
-        }
+        const error = validate(req);
+        if(error !== null) return next(error);
 
         await Game2048.upsert({
             ...req.body,
             date: new Date()
         },{
             where: {
-                user: req.body.user
+                user: req.auth.payload.sub
             }
         });
 
-        res.sendStatus(202);
+        apiResponse(res,"Accepted",202);
     } catch (error) {
-        next(asApiError(error));
+       next(createHttpError.InternalServerError(error));
     }
 });
 

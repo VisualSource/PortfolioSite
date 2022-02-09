@@ -3,6 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const helmet = require("helmet");
+const cors = require('cors')
 require("./models");
 
 const indexRouter = require('./routes/index');
@@ -10,6 +11,7 @@ const apiRouter = require("./routes/api");
 
 const app = express();
 
+app.use(cors())
 app.use(helmet.xssFilter());
 app.use(helmet.hidePoweredBy());
 app.use(helmet.hsts());
