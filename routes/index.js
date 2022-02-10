@@ -14,9 +14,5 @@ router.get("/games/painotiles",(req,res)=>{
   res.render("/games/painotiles/index");
 });
 
-router.get("*",(req,res)=>{
-  res.render('index');
-});
-
 
 module.exports = router;

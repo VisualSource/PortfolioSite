@@ -1,0 +1,52 @@
+{
+  "name": "VisualSource: Panio Tiles",
+  "short_name": "short name",
+  "theme_color": "#fff",
+  "background_color": "#fff",
+  "display": "fullScreen",
+  "orientation": "portrait",
+  "scope": "/games/paniotiles",
+  "start_url": "/games/paniotiles/",
+  "icons": [
+    {
+      "src": "images/icons/icon72.webp",
+      "sizes": "72x72",
+      "type": "image/webp"
+    },
+    {
+      "src": "images/icons/icon96.webp",
+      "sizes": "96x96",
+      "type": "image/webp"
+    },
+    {
+      "src": "images/icons/icon128.webp",
+      "sizes": "128x128",
+      "type": "image/webp"
+    },
+    {
+      "src": "images/icons/icon144.webp",
+      "sizes": "144x144",
+      "type": "image/webp"
+    },
+    {
+      "src": "images/icons/icon152.webp",
+      "sizes": "152x152",
+      "type": "image/webp"
+    },
+    {
+      "src": "images/icons/icon192.webp",
+      "sizes": "192x192",
+      "type": "image/webp"
+    },
+    {
+      "src": "images/icons/icon384.webp",
+      "sizes": "384x384",
+      "type": "image/webp"
+    },
+    {
+      "src": "images/icons/icon512.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}

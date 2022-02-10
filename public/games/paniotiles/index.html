@@ -4,27 +4,222 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Down For Maintenance</title>
-    <link rel="shortcut icon" href="/favicon.png" type="image/png"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"/>
-    <title>Site Maintenance</title>
-    <style>
-        body { text-align: center; padding: 150px; font: 20px Helvetica, sans-serif; color: #333; }
-        h1 { font-size: 50px; }
-        article { display: block; text-align: left; width: 650px; margin: 0 auto; }
-        a { color: #dc8100; text-decoration: none; }
-        a:hover { color: rgb(47, 139, 214); text-decoration: none; }
-    </style>
-
-<article>
+    <meta property="og:title" content="VisualSource: 2048">
+    <meta property="og:type" content="game">
+    <meta property="og:url" content="https://visualsource.us/games/paniotiles">
+    <meta property="og:description" content="Panio Tiles"/>
+    <meta property="og:image" content="https://visualsource.us/games/paniotiles/images/icons/icon144.webp">
+    <link rel="shortcut icon" href="/games/paniotiles/images/icons/icon72.webp" type="image/webp">
+    <link rel="manifest" href="/games/paniotiles/manifest.json">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>Paino Tiles</title>
+  <script type="module" crossorigin src="/games/paniotiles/assets/index.7c7cc811.js"></script>
+  <link rel="modulepreload" href="/games/paniotiles/assets/vendor.208b5754.js">
+  <link rel="stylesheet" href="/games/paniotiles/assets/index.c2f3778d.css">
 </head>
 <body>
-    <article>
-        <h1>We&rsquo;ll be back soon!</h1>
-        <div>
-            <p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. If you need to you can always <a href="mailto:support@visualsource.us">contact us</a>, otherwise we&rsquo;ll be back online shortly!</p>
-            <p>&mdash; The Team</p>
+    <template data-main-content>
+        <div id="main-menu-preview">
+            <div data-song-description>
+                <h2 id="song-name">Song Name</h2>
+                <div id="song-author">Song author</div>
+            </div>
+            <div data-song-img class="song-img">
+                <img src="" alt="song preview" data-song-imgsrc/>
+            </div>
+            <button id="play-game" class="mdc-button mdc-button--raised">
+                <span class="mdc-button__label">Play</span>
+            </button>
         </div>
-    </article>
+    </template>
+    <template data-song-list>
+        <div id="main-menu-song-list">
+            <ul class="mdc-list mdc-list--two-line"></ul>
+        </div>
+    </template>
+    <template data-song-item>
+        <li class="mdc-list-item" tabindex="0" data-song-id="">         
+            <span class="mdc-list-item__graphic" aria-hidden="true" data-item-img>
+                <img src="" alt="song preview"/>
+            </span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text" data-item-title>
+                    Song Title
+                </span>
+                <span class="mdc-list-item__secondary-text" data-item-author>
+                    Song author
+                </span>
+            </span>
+            <span aria-hidden="true" class="mdc-list-item__meta">
+                <button data-song-list-play class="mdc-icon-button material-icons mdc-ripple-upgraded--unbounded mdc-ripple-upgraded" tabindex="-1">
+                    play_arrow
+                </button>
+            </span>
+        </li>
+        <li role="separator" class="mdc-list-divider"></li>
+    </template>
+    <aside class="mdc-drawer mdc-drawer--modal">
+        <div class="mdc-drawer__content">
+          <nav class="mdc-list">
+            <a class="mdc-list-item settings-menu-item" href="#" id="fullscreen-access" aria-current="page" tabindex="0">
+              <span class="mdc-list-item__ripple"></span>
+              <i class="material-icons mdc-list-item__graphic" aria-hidden="true">fullscreen</i>
+              <span class="mdc-list-item__text">Fullscreen</span>
+            </a>
+            <a class="mdc-list-item settings-menu-item" href="https://visualsource.us/report">
+              <span class="mdc-list-item__ripple"></span>
+              <i class="material-icons mdc-list-item__graphic" aria-hidden="true">report_problem</i>
+              <span class="mdc-list-item__text">Report Issue</span>
+            </a>
+            <a class="mdc-list-item settings-menu-item" href="#">
+              <span class="mdc-list-item__ripple"></span>
+              <i class="material-icons mdc-list-item__graphic" aria-hidden="true">build</i>
+              <span class="mdc-list-item__text" id="build-version"></span>
+            </a>
+          </nav>
+        </div>
+      </aside>
+    <div class="mdc-drawer-scrim"></div>
+    <div id="ingame-score">
+        <div>
+            <h3 data-score>0</h3>
+            <div role="progressbar" class="mdc-linear-progress">
+                <div class="mdc-linear-progress__buffering-dots"></div>
+                <div class="mdc-linear-progress__buffer"></div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                  <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                  <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+            </div>
+            <div data-bouns>1x</div>
+        </div>
+    </div>
+    <div id="ingame-fail">
+        <h3 data-failed-why>FAILED TO</h3>
+    </div>
+    <div id="ingame-options">
+        <h3>PAUSED</h3>
+        <div>
+            <button class="mdc-button mdc-button--raised" id="game-exit">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__label">EXIT</span>
+            </button>
+            <button class="mdc-button mdc-button--raised" id="game-resume">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__label">RESUME</span>
+            </button>
+        </div>
+    </div>
+    <div id="ingame-fab" class="mdc-touch-target-wrapper">
+        <button class="mdc-fab mdc-fab--mini mdc-fab--touch">
+          <div class="mdc-fab__ripple"></div>
+          <span class="material-icons mdc-fab__icon">settings</span>
+          <div class="mdc-fab__touch"></div>
+        </button>
+    </div>
+    <div id="stage-overlay">
+        <h2>Stage <span id="stage-number">1</span></h2>
+    </div>
+    <div id="loading-overlay">
+        <div class="la-line-scale-party">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <h4>Loading</h4>
+    </div>
+    <div id="game-over">
+        <div class="song-header">
+            <h3 data-song-title>Song Tile</h3>
+            <div data-song-author>Song Author</div>
+        </div>
+        <div class="song-img">
+            <img src="https://via.placeholder.com/480" alt="song preview" data-song-imgsrc/>
+        </div>
+        <div class="song-score">
+            <div>
+                <h3 data-score>50,9999</h3>
+            </div>
+        </div>
+        <div class="game-data">
+            <div data-tile-prefect>
+                <div>100</div>
+                <div>PREFECT</div>
+            </div>
+        </div>
+
+        <button id="play-retry" class="mdc-button mdc-button--raised">
+            <span class="mdc-button__label">RETRY</span>
+        </button>
+
+        <button id="play-continue" class="mdc-button mdc-button--raised">
+            <span class="mdc-button__label">CONTINUE</span>
+        </button>
+    </div>
+    <div id="main-menu">
+        <header class="vs-app-bar-top">
+            <button class="mdc-icon-button material-icons" id="app-settings">
+                <div class="mdc-icon-button__ripple"></div>
+                menu
+                <div class="mdc-icon-button__touch"></div>
+            </button>
+        </header>
+        <div class="main-menu-content"></div>
+        <footer class="vs-app-bar-bottom">
+            <div class="mdc-touch-target-wrapper">
+                <button class="mdc-icon-button material-icons vs-button-group-left">
+                    <div class="mdc-icon-button__ripple"></div>
+                    list
+                    <div class="mdc-icon-button__touch"></div>
+                </button>
+            </div>
+            <div class="mdc-touch-target-wrapper" id="app-home">
+                <button class="mdc-icon-button material-icons vs-button-group-middle">
+                    <div class="mdc-icon-button__ripple"></div>
+                    play_arrow
+                    <div class="mdc-icon-button__touch"></div>
+                </button>
+            </div>
+            <div class="mdc-touch-target-wrapper"  id="app-songlist">
+                <button class="mdc-icon-button material-icons vs-button-group-right">
+                    <div class="mdc-icon-button__ripple"></div>
+                    apps
+                    <div class="mdc-icon-button__touch"></div>
+                </button>
+            </div>
+        </footer>
+    </div>
+    <div class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface">
+            <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+            <h2 class="mdc-dialog__title" id="my-dialog-title"><!--
+            -->Fullscreen<!--
+        --></h2>
+            <div class="mdc-dialog__content" id="my-dialog-content">
+                This app works best in fullscreen. Would you like to enter fullscreen?
+            </div>
+            <footer class="mdc-dialog__actions">
+                <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
+                    <span class="mdc-button__label">No</span>
+                </button>
+                <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+                    <span class="mdc-button__label">Yes</span>
+                </button>
+            </footer>
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
+    
 </body>
 </html>
