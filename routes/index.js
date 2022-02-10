@@ -1,11 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-/* GET home page. */
-router.get('/', function(_req, res) {
-  res.render('index');
-});
-
 router.get("/games/pt_legacy",(req,res)=>{
   res.render("/games/pt_legacy/index");
 });
@@ -17,6 +12,10 @@ router.get("/games/2048",(req,res)=>{
 });
 router.get("/games/painotiles",(req,res)=>{
   res.render("/games/painotiles/index");
+});
+
+router.get("*",(req,res)=>{
+  res.render('index');
 });
 
 

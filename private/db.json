@@ -1,28 +1,28 @@
 {
-    "version": "3.0.0",
+    "version": "3.1.0",
     "games": [
             {
                 "title": "Polytopia Legacy Demo",
                 "description": "A web based version of the game polytopia.",
-                "route":"https://visualsource.us/games/pt_legacy",
+                "route":"/games/pt_legacy",
                 "image":"/images/polytopia/polytopia_legacy.webp"
             },
             {
                 "title": "Polytopia Demo 8",
                 "description": "A web based version of the game polytopia.",
-                "route":"https://visualsource.us/games/demo8",
+                "route":"/games/demo8",
                 "image":"/images/polytopia/polytopia_demo.webp"
             },
             {
                 "title": "2048",
                 "description": "A sliding tile puzzle",
-                "route":"https://visualsource.us/games/2048",
+                "route":"/games/2048",
                 "image": "/images/2048.webp"
             },
             {
                 "title": "Panio Tiles",
                 "description": "A simple game where you hit tile to music",
-                "route": "https://visualsource.us/games/paniotiles",
+                "route": "/games/paniotiles",
                 "image": "/images/2048.webp"
             }
     ],
