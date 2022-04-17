@@ -1,5 +1,5 @@
 {
-    "version": "3.1.0",
+    "version": "3.2.0",
     "games": [
             {
                 "title": "Polytopia Legacy Demo",
@@ -71,10 +71,10 @@
         },
         {
             "images": [],
-            "title": "Polyscript lang",
-            "branch": "master",
-            "repo": "Polyscript",
-            "desc": "A first attempt in writing a programing language"
+            "title": "Vip Programing language2",
+            "branch": "vip",
+            "repo": "Vip",
+            "desc": "Programing language"
         }
     ]
 }
