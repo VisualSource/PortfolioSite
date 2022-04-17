@@ -1,5 +1,5 @@
 {
-    "version": "3.2.0",
+    "version": "3.2.1",
     "games": [
             {
                 "title": "Polytopia Legacy Demo",
@@ -28,14 +28,19 @@
     ],
     "projects": [
         {
-            "images":["/images/polytopia/polytopia_demo.webp","/images/polytopia/polytopia.webp"],
+            "images":[
+                "/images/polytopia/polytopia_demo.webp",
+                "/images/polytopia/polytopia.webp"
+            ],
             "title": "PolytopiaJS",
             "branch": "master",
             "repo":"polytopia",
-            "desc": "A remake of the game Polytopua in Javascript"
+            "desc": "A clone of the game Polytopia in Javascript"
         },
         {
-            "images": ["/images/mc_installer.webp"],
+            "images": [
+                "/images/mc_installer.webp"
+            ],
             "title": "Rusty Minecraft Launcher",
             "branch": "master",
             "repo": "mc-installer-v2",
