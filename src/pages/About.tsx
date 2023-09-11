@@ -16,7 +16,7 @@ const skills: { name: string; value: number }[] = [
 
 const About: React.FC = () => {
     return (
-        <div className="md:grid md:grid-cols-6 h-full">
+        <div className="md:grid md:grid-cols-6 h-full flex-1">
             <div className="col-span-2 col-start-2 flex flex-col justify-center">
 
                 <div className="flex justify-center">
@@ -24,7 +24,7 @@ const About: React.FC = () => {
                         <AvatarFallback>
                             <User className="h-24 w-24" />
                         </AvatarFallback>
-                        <AvatarImage src="" />
+                        <AvatarImage src="/images/collinblosser.jpg" alt="Collin Blosser" />
                     </Avatar>
                 </div>
                 <div className="p-4">

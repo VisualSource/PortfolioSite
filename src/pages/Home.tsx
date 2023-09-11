@@ -1,13 +1,11 @@
 import { User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-
-
 const Home: React.FC = () => {
     return (
-        <div className="flex flex-col justify-center items-center h-full">
+        <div className="flex flex-col justify-center items-center h-full flex-1">
             <Avatar className="h-48 w-48 mb-4">
-                <AvatarImage />
+                <AvatarImage src="/images/collinblosser.jpg" alt="Collin Blosser" />
                 <AvatarFallback>
                     <User className="h-24 w-24" />
                 </AvatarFallback>

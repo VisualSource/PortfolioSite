@@ -3,10 +3,9 @@ import ReactDOM from 'react-dom/client';
 import React from 'react';
 import './index.css';
 import Portfolio from './pages/Portfolio.tsx';
-import App from './App.tsx';
-import Home from './pages/home.tsx';
 import About from './pages/About.tsx';
-
+import Home from './pages/Home.tsx';
+import App from './App.tsx';
 
 const router = createBrowserRouter([
   {

@@ -24,11 +24,11 @@ type ProjectProps = {
 
 const ProjectCard: React.FC<ProjectProps> = ({ image, name, description, links }) => {
     return (
-        <Card>
+        <Card className="h-full flex flex-col">
             <CardHeader>
                 <CardTitle>{name}</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className='flex-1 flex flex-col'>
                 <div className='flex flex-col items-start gap-2'>
 
                     <Avatar className="w-full h-60 max-h-60 aspect-square rounded-md">
@@ -38,17 +38,17 @@ const ProjectCard: React.FC<ProjectProps> = ({ image, name, description, links }
                         <AvatarImage className="rounded-md" src={image.src} alt={image.alt} />
                     </Avatar>
 
-                    <p className="leading-7 mb-6">
+                    <p className="leading-7">
                         {description}
                     </p>
                 </div>
             </CardContent>
             <CardFooter className='flex justify-end gap-2'>
-                <a href={links.source} className={buttonVariants({ variant: "secondary" })}>
+                <a target='_blank' href={links.source} className={buttonVariants({ variant: "secondary" })}>
                     <Code2 className="mr-2 h-4 w-4" /> View Source
                 </a>
                 {links.demo ? (
-                    <a href={links.demo} className={buttonVariants({ variant: "default" })}>
+                    <a target='_blank' href={links.demo} className={buttonVariants({ variant: "default" })}>
                         <Eye className="mr-2 h-4 w-4" /> View Demo
                     </a>
                 ) : null}

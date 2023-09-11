@@ -1,7 +1,6 @@
-import { Github, Linkedin } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
-
+import { FileText, Github, Linkedin } from "lucide-react";
+import { buttonVariants, Button } from "@/components/ui/button";
 
 const Navbar: React.FC = () => {
     return (
@@ -12,12 +11,21 @@ const Navbar: React.FC = () => {
                 <NavLink to="/portfolio" className={({ isActive }) => buttonVariants({ variant: "link", className: { "underline": isActive } })}>Portfolio</NavLink>
             </div>
             <div className="flex gap-4">
-                <a title="Linkedin" className={buttonVariants({ size: "icon", variant: "outline" })} href="https://linkedin.com/collinblosser">
-                    <Linkedin />
-                </a>
-                <a title="Github" className={buttonVariants({ size: "icon", variant: "outline" })} href="https://github.com/VisualSource">
-                    <Github />
-                </a>
+                <Button asChild variant="outline" size="icon">
+                    <a target="_blank" href="https://www.linkedin.com/in/collinblosser/overlay/1635539450293/single-media-viewer/?type=DOCUMENT&profileId=ACoAADmMUlEBjD4deSJmvD5Y0L5q1khNraoUm5c" title="Resume">
+                        <FileText />
+                    </a>
+                </Button>
+                <Button asChild variant="outline" size="icon">
+                    <a target="_blank" title="Linkedin" href="https://linkedin.com/collinblosser">
+                        <Linkedin />
+                    </a>
+                </Button>
+                <Button asChild variant="outline" size="icon">
+                    <a target="_blank" title="Github" href="https://github.com/VisualSource">
+                        <Github />
+                    </a>
+                </Button>
             </div>
         </nav>
     );

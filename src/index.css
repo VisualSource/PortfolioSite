@@ -5,9 +5,9 @@
 @layer base {
   html,
   body {
-    @apply h-screen;
+    @apply min-h-screen flex flex-col;
   }
   #root {
-    @apply h-full flex flex-col;
+    @apply h-full flex flex-col flex-1;
   }
 }
