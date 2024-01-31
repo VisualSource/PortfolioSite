@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Home: React.FC = () => {
     return (
-        <div className="flex flex-col justify-center items-center h-full flex-1">
+        <div className="flex flex-col justify-center items-center flex-1 min-h-screen">
             <Avatar className="h-48 w-48 mb-4">
                 <AvatarImage src="/images/collinblosser.jpg" alt="Collin Blosser" />
                 <AvatarFallback>

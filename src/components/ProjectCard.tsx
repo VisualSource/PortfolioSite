@@ -24,7 +24,7 @@ type ProjectProps = {
 
 const ProjectCard: React.FC<ProjectProps> = ({ image, name, description, links }) => {
     return (
-        <Card className="h-full flex flex-col">
+        <Card className="h-full flex flex-col rounded-none">
             <CardHeader>
                 <CardTitle>{name}</CardTitle>
             </CardHeader>
@@ -44,12 +44,12 @@ const ProjectCard: React.FC<ProjectProps> = ({ image, name, description, links }
                 </div>
             </CardContent>
             <CardFooter className='flex justify-end gap-2'>
-                <a target='_blank' href={links.source} className={buttonVariants({ variant: "secondary" })}>
+                <a target='_blank' href={links.source} className={buttonVariants({ variant: "secondary", className: "rounded-none" })}>
                     <Code2 className="mr-2 h-4 w-4" /> View Source
                 </a>
                 {links.demo ? (
-                    <a target='_blank' href={links.demo} className={buttonVariants({ variant: "default" })}>
-                        <Eye className="mr-2 h-4 w-4" /> View Demo
+                    <a target='_blank' href={links.demo} className={buttonVariants({ variant: "default", className: "rounded-none" })}>
+                        <Eye className="mr-2 h-4 w-4" /> View
                     </a>
                 ) : null}
             </CardFooter>
