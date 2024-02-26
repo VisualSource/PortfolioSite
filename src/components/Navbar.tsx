@@ -1,6 +1,8 @@
-import { NavLink } from "react-router-dom";
 import { FileText, Github, Linkedin } from "lucide-react";
+import { NavLink } from "react-router-dom";
+
 import { buttonVariants, Button } from "@/components/ui/button";
+import config from '../config.json';
 
 const Navbar: React.FC = () => {
     return (
@@ -12,17 +14,17 @@ const Navbar: React.FC = () => {
             </div>
             <div className="flex gap-4">
                 <Button asChild variant="outline" size="icon">
-                    <a target="_blank" href="https://www.linkedin.com/in/collinblosser/overlay/1635539450293/single-media-viewer/?type=DOCUMENT&profileId=ACoAADmMUlEBjD4deSJmvD5Y0L5q1khNraoUm5c" title="Resume">
+                    <a target="_blank" href={config.resume} title="Resume">
                         <FileText />
                     </a>
                 </Button>
                 <Button asChild variant="outline" size="icon">
-                    <a target="_blank" title="Linkedin" href="https://linkedin.com/collinblosser">
+                    <a target="_blank" title="Linkedin" href={config.linkedin}>
                         <Linkedin />
                     </a>
                 </Button>
                 <Button asChild variant="outline" size="icon">
-                    <a target="_blank" title="Github" href="https://github.com/VisualSource">
+                    <a target="_blank" title="Github" href={config.github}>
                         <Github />
                     </a>
                 </Button>

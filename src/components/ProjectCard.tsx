@@ -6,23 +6,25 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { buttonVariants } from "@/components/ui/button";
+import type { Project } from '@/lib/config';
 
-type ProjectProps = {
-    name: string;
-    description: string;
-    image: {
-        src: string;
-        alt: string;
-    },
-    links: {
-        source: string;
-        demo: string | null;
+const Icon: React.FC<{ icon: Project["links"][string]["icon"] }> = ({ icon }) => {
+    switch (icon) {
+        default:
+        case "eye":
+            return (
+                <Eye className="mr-2 h-4 w-4" />
+            );
+        case "code":
+            return (
+                <Code2 className="mr-2 h-4 w-4" />
+            );
     }
 }
 
-const ProjectCard: React.FC<ProjectProps> = ({ image, name, description, links }) => {
+const ProjectCard: React.FC<Project> = ({ bg_alt, bg_img, name, description, links }) => {
     return (
         <Card className="h-full flex flex-col rounded-none">
             <CardHeader>
@@ -35,7 +37,7 @@ const ProjectCard: React.FC<ProjectProps> = ({ image, name, description, links }
                         <AvatarFallback className="rounded-md">
                             <Image />
                         </AvatarFallback>
-                        <AvatarImage className="rounded-md" src={image.src} alt={image.alt} />
+                        <AvatarImage className="rounded-md" src={bg_img} alt={bg_alt} />
                     </Avatar>
 
                     <p className="leading-7">
@@ -44,14 +46,11 @@ const ProjectCard: React.FC<ProjectProps> = ({ image, name, description, links }
                 </div>
             </CardContent>
             <CardFooter className='flex justify-end gap-2'>
-                <a target='_blank' href={links.source} className={buttonVariants({ variant: "secondary", className: "rounded-none" })}>
-                    <Code2 className="mr-2 h-4 w-4" /> View Source
-                </a>
-                {links.demo ? (
-                    <a target='_blank' href={links.demo} className={buttonVariants({ variant: "default", className: "rounded-none" })}>
-                        <Eye className="mr-2 h-4 w-4" /> View
+                {Object.entries(links).map(([key, value], i) => (
+                    <a key={i} target='_blank' href={value.link} className={buttonVariants({ variant: value.type, className: "rounded-none" })}>
+                        <Icon icon={value.icon} /> {key}
                     </a>
-                ) : null}
+                ))}
             </CardFooter>
         </Card>
     );

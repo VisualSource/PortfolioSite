@@ -1,0 +1,75 @@
+{
+  "$schema": "../config.schema.json",
+  "resume": "/resume/1-2024-b/Resume - Collin Blosser.pdf",
+  "github": "https://github.com/VisualSource",
+  "email": "collin_blosser@yahoo.com",
+  "phone": {
+    "display": "754 575-3177",
+    "tel": "+15745753177"
+  },
+  "linkedin": "https://linkedin.com/collinblosser",
+  "projects": [
+    {
+      "name": "Midwest Raptor Junkies",
+      "description": "Midwest Raptor Junkies is the home for the Midwest Raptor Junkies group, containing a community form, online shop, articles, and upcoming events pages.",
+      "bg_img": "/images/midwestraptorjunkies.webp",
+      "bg_alt": "Midwest Raptor Junkies",
+      "links": {
+        "View": {
+          "link": "https://midwestraptorjunkies.com",
+          "icon": "eye",
+          "type": "default"
+        },
+        "View Source": {
+          "link": "https://github.com/RapterJunky/midwestrapterjunky",
+          "icon": "code",
+          "type": "secondary"
+        }
+      }
+    },
+    {
+      "name": "ProEstimates",
+      "description": "ProEstimates is a online platform for matching clients with contractors with quoting.",
+      "bg_img": "/images/ProEstimates.webp",
+      "bg_alt": "ProEstimates",
+      "links": {
+        "View Source": {
+          "link": "https://github.com/bethel-school-of-technology/team-coding-knights-frontend",
+          "icon": "code",
+          "type": "secondary"
+        }
+      }
+    },
+    {
+      "name": "X Wing Wiki",
+      "description": "X-Wing-Wiki is a small google search like rules and reference lookup site for the X-Wing: The Miniatures Game (Second Edition) by Atomic Mass Games.",
+      "bg_img": "/images/xwingwiki.webp",
+      "bg_alt": "X Wing Wiki",
+      "links": {
+        "View": {
+          "link": "https://xwing.visualsource.us/",
+          "icon": "eye",
+          "type": "default"
+        },
+        "View Source": {
+          "link": "https://github.com/VisualSource/X-Wing-Wiki",
+          "icon": "code",
+          "type": "secondary"
+        }
+      }
+    },
+    {
+      "name": "Rusty Minecraft Launcher",
+      "description": "Rusty Minecraft Launcher is a Minecraft Client launcher and a simple one click mod installer.",
+      "bg_img": "/images/RustyMinecraftLauncher.webp",
+      "bg_alt": "RustyMinecraftLauncher",
+      "links": {
+        "View Source": {
+          "link": "https://github.com/VisualSource/rusty-mc-launcher",
+          "icon": "code",
+          "type": "secondary"
+        }
+      }
+    }
+  ]
+}

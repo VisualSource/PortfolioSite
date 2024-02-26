@@ -1,10 +1,12 @@
-import { NavLink, Outlet } from 'react-router-dom';
 import { useParallax } from "react-scroll-parallax";
-import SocialList from './components/SocialList';
-import clsx from 'clsx';
-import { Sheet, SheetContent, SheetTrigger } from './components/ui/sheet';
+import { NavLink, Outlet } from 'react-router-dom';
 import { Menu } from 'lucide-react';
+import clsx from 'clsx';
+
+import { Sheet, SheetContent, SheetTrigger } from './components/ui/sheet';
+import SocialList from './components/SocialList';
 import { Button } from './components/ui/button';
+import config from './config.json'
 
 function App() {
   const parallaxbg = useParallax({
@@ -81,13 +83,13 @@ function App() {
               <section className="p-16 pb-12 flex items-center">
                 <h3 className="font-black leading-6 uppercase w-24">Phone</h3>
                 <p>
-                  <a href="tel:+15745753177">754 575-3177</a>
+                  <a href={`tel:${config.phone.tel}`}>{config.phone.display}</a>
                 </p>
               </section>
               <section className="p-16 pb-12 flex items-center">
                 <h3 className="font-black leading-6 uppercase tracking-wider w-24">Email</h3>
                 <p>
-                  <a href="mailto:collin_blosser@yahoo.com">collin_blosser@yahoo.com</a>
+                  <a href={`mailto:${config.email}`}>{config.email}</a>
                 </p>
               </section>
               <section className="p-16 pb-12 flex items-center text-zinc-800/60">

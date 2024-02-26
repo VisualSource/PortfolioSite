@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "phone": {
+      "type": "object",
+      "properties": {
+        "display": {
+          "type": "string"
+        },
+        "tel": {
+          "type": "string"
+        }
+      },
+      "required": ["display", "tel"]
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "resume": {
+      "type": "string"
+    },
+    "github": {
+      "type": "string"
+    },
+    "linkedin": {
+      "type": "string"
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "bg_img": {
+            "type": "string"
+          },
+          "bg_alt": {
+            "type": "string"
+          },
+          "links": {
+            "type": "object",
+            "patternProperties": {
+              "(^\\S[a-z|\\s]+\\S$)": {
+                "description": "Name to a link",
+                "type": "object",
+                "properties": {
+                  "link": {
+                    "description": "Url to resource",
+                    "format": "uri",
+                    "type": "string"
+                  },
+                  "icon": {
+                    "description": "The icon that will be displayed before the text",
+                    "enum": ["eye", "code"],
+                    "type": "string"
+                  },
+                  "type": {
+                    "description": "The style of the button",
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "link",
+                          "default",
+                          "destructive",
+                          "outline",
+                          "secondary",
+                          "ghost"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": ["link", "icon", "type"]
+              }
+            }
+          }
+        },
+        "required": ["name", "description", "bg_img", "bg_alt", "links"]
+      }
+    }
+  },
+  "required": ["resume", "github", "linkedin", "projects", "email", "phone"]
+}
